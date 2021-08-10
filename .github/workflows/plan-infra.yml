@@ -42,7 +42,8 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |-
+          make tf-init
         continue-on-error: true
 
       - name: Terraform Validate
