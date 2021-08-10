@@ -36,7 +36,7 @@ variable "public_subnets" {
 
 variable "amazon_amis" {
   description = "Amazon Linux AMI for bastion instances"
-  type = map(string)
+  type        = map(string)
   default = {
     us-west-2 = "ami-0c2b8ca1dad447f8a"
   }
@@ -45,7 +45,7 @@ variable "amazon_amis" {
 // Update these AMI IDs - http://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_container_instance.html
 variable "amazon_ecs_amis" {
   description = "Amazon Linux AMI for ECS servers"
-  type = map(string)
+  type        = map(string)
   default = {
     "us-west-2" = "ami-0d034e17dea566f28"
   }
@@ -53,22 +53,22 @@ variable "amazon_ecs_amis" {
 
 variable "ecs_instance_type" {
   description = "The AWS ECS instance type"
-  default = "t2.medium"
+  default     = "t2.medium"
 }
 
 variable "asg_min" {
   description = "Min numbers of EC2s in ASG"
-  default = "1"
+  default     = "1"
 }
 
 variable "asg_max" {
   description = "Max numbers of EC2s in ASG"
-  default = "1"
+  default     = "1"
 }
 
 variable "asg_desired" {
   description = "Desired numbers of EC2s in ASG"
-  default = "1"
+  default     = "1"
 }
 
 variable "single_nat_gateway" {
