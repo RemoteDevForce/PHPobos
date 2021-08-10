@@ -5,19 +5,21 @@ resource "aws_ecs_cluster" "ecs" {
 
 # Launch configuration used by ASG
 resource "aws_launch_configuration" "ecs-lc" {
-  name_prefix          = "${var.env_name}-${var.region}-ecs-lc-"
-  image_id             = lookup(var.amazon_ecs_amis, var.region)
-  instance_type        = var.ecs_instance_type
-  key_name             = "root-${var.env_name}-${var.region}-ssh-key"
-  security_groups      = [aws_security_group.ecs.id]
+  name_prefix = "${var.env_name}-${var.region}-ecs-lc-"
+  image_id = lookup(var.amazon_ecs_amis, var.region)
+  instance_type = var.ecs_instance_type
+  key_name = "root-${var.env_name}-${var.region}-ssh-key"
+  security_groups = [
+    aws_security_group.ecs.id]
   iam_instance_profile = aws_iam_role.ecs_iam_role.name
   associate_public_ip_address = false
-  user_data            = data.template_file.userdata.rendered
+  user_data = data.template_file.userdata.rendered
 
   lifecycle {
     create_before_destroy = true
   }
-  depends_on = [aws_ecs_cluster.ecs]
+  depends_on = [
+    aws_ecs_cluster.ecs]
 }
 
 # IAM
@@ -56,23 +58,26 @@ resource "aws_security_group" "ecs" {
 
   ingress {
     from_port = 1
-    to_port   = 65535
-    protocol  = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    to_port = 65535
+    protocol = "tcp"
+    cidr_blocks = [
+      "0.0.0.0/0"]
   }
 
   ingress {
     from_port = 1
-    to_port   = 65535
-    protocol  = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
+    to_port = 65535
+    protocol = "udp"
+    cidr_blocks = [
+      "0.0.0.0/0"]
   }
 
   egress {
     from_port = 0
     to_port = 0
     protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [
+      "0.0.0.0/0"]
   }
 
   tags = {
@@ -106,12 +111,14 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alarm-up" {
   threshold = "75"
   alarm_description = "This metric monitors ECS RAM utilization"
   insufficient_data_actions = []
-  alarm_actions = [aws_autoscaling_policy.ecs-scale-up.arn]
+  alarm_actions = [
+    aws_autoscaling_policy.ecs-scale-up.arn]
   dimensions = {
     ClusterName = aws_ecs_cluster.ecs.name
   }
 
-  depends_on = [aws_autoscaling_policy.ecs-scale-up]
+  depends_on = [
+    aws_autoscaling_policy.ecs-scale-up]
 }
 
 resource "aws_autoscaling_policy" "ecs-scale-down" {
@@ -165,5 +172,6 @@ resource "aws_autoscaling_group" "ecs-asg" {
     create_before_destroy = true
   }
 
-  depends_on = [aws_launch_configuration.ecs-lc]
+  depends_on = [
+    aws_launch_configuration.ecs-lc]
 }

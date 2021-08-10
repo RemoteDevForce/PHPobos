@@ -6,10 +6,10 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids = [
     aws_security_group.bastion.id
   ]
-  subnet_id                   = element(module.vpc.public_subnets, 0)
+  subnet_id = element(module.vpc.public_subnets, 0)
   associate_public_ip_address = true
-  source_dest_check           = false
-  iam_instance_profile        = aws_iam_instance_profile.bastion_profile.name
+  source_dest_check = false
+  iam_instance_profile = aws_iam_instance_profile.bastion_profile.name
 
   tags = {
     Name = "${var.env_name}-${var.region}-bastion"
@@ -29,7 +29,8 @@ resource "aws_security_group" "bastion" {
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [
+      "0.0.0.0/0"]
     self = false
   }
 
@@ -38,7 +39,8 @@ resource "aws_security_group" "bastion" {
     from_port = 0
     to_port = 0
     protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [
+      "0.0.0.0/0"]
   }
 
   tags = {
