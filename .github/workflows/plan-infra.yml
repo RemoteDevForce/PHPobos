@@ -5,13 +5,19 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  ENV: demo
+  TF_ACTION: plan
+
 jobs:
   terraform-actions:
     name: Workflow
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: terraform/tf-aws-infra
+
     steps:
 
       - name: Checkout Repository
