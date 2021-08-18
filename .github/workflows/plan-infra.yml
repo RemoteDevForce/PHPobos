@@ -2,6 +2,10 @@ name: Terraform Plan - Infrastructure
 
 on:
   push:
+    # branches:
+    #   - master
+    # tags:
+    #   - v\d+\.\d+\.\d+
   pull_request:
   workflow_dispatch:
 
@@ -11,7 +15,7 @@ env:
 
 jobs:
   terraform-actions:
-    name: Workflow
+    name: Terraform Validation & Planning Workflow
     runs-on: ubuntu-latest
 
     defaults:
@@ -132,3 +136,5 @@ jobs:
           test ${{ steps.init.outputs.exitcode }} -eq 0
           echo validate
           test ${{ steps.validate.outputs.exitcode }} -eq 0
+          echo plan
+          test ${{ steps.plan.outputs.exitcode }} -eq 0

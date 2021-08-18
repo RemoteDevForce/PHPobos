@@ -1,0 +1,62 @@
+name: Terraform Apply - Infrastructure
+
+on:
+  workflow_dispatch:
+
+env:
+  ENV: demo
+  TF_ACTION: apply
+
+jobs:
+  terraform-actions:
+    name: Terraform Apply Workflow
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: terraform/tf-aws-infra
+
+    steps:
+
+#      - name: Set ENV
+#        run: |-
+#          if [ ${GITHUB_REF##*/} = "master" ]; then
+#            echo "ENV=staging" >> $GITHUB_ENV
+#          else
+#            echo "ENV=prod" >> $GITHUB_ENV
+#          fi
+
+      - name: Checkout Repository
+        uses: actions/checkout@master
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.3
+
+      - name: Terraform Init
+        id: init
+        run: |-
+          make tf-init
+        continue-on-error: true
+
+      - name: Terraform Apply
+        id: apply
+        run: |-
+          make tf-action
+        continue-on-error: true
+
+      - name: 'End results'
+        shell: bash
+        run: |
+          echo init
+          test ${{ steps.init.outputs.exitcode }} -eq 0
+          echo apply
+          test ${{ steps.apply.outputs.exitcode }} -eq 0
