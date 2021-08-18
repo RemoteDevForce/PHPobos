@@ -38,7 +38,7 @@ variable "amazon_amis" {
   description = "Amazon Linux AMI for bastion instances"
   type        = map(string)
   default = {
-    us-west-2 = "ami-0c2b8ca1dad447f8a"
+    us-west-2 = "ami-083ac7c7ecf9bb9b0"
   }
 }
 

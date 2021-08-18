@@ -51,3 +51,11 @@ jobs:
         run: |
           echo apply
           test ${{ steps.apply.outputs.exitcode }} -eq 0
+
+# Uncomment and setup your webhook as a secret to send messages to your team when deploys finish
+#      - name: Slack Notification
+#        uses: rtCamp/action-slack-notify@v2
+#        env:
+#          SLACK_MESSAGE: ${{join(steps.apply.outputs.*, '\n')}}
+#          SLACK_TITLE: CI Test Suite
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
