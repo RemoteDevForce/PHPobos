@@ -5,7 +5,6 @@ on:
 
 env:
   ENV: demo
-  TF_ACTION: apply
 
 jobs:
   terraform-actions:
@@ -41,22 +40,14 @@ jobs:
         with:
           terraform_version: 1.0.3
 
-      - name: Terraform Init
-        id: init
-        run: |-
-          make tf-init
-        continue-on-error: true
-
       - name: Terraform Apply
         id: apply
         run: |-
-          make tf-action
+          make tf-apply
         continue-on-error: true
 
       - name: 'End results'
         shell: bash
         run: |
-          echo init
-          test ${{ steps.init.outputs.exitcode }} -eq 0
           echo apply
           test ${{ steps.apply.outputs.exitcode }} -eq 0
