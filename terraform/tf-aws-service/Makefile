@@ -1,4 +1,5 @@
 ENV?=demo
+APP_NAME?=portal
 
 app_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.app_name')
 env_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.env_name')
@@ -8,20 +9,20 @@ remote_tfstate_bucket=${app_name}-${env_name}-tfstate-${region}
 tf-init:
 	terraform init \
     -backend-config="bucket=${remote_tfstate_bucket}" \
-    -backend-config="key=infrastructure.tfstate" \
+    -backend-config="key=${env_name}/${app_name}-ecs-service.tfstate" \
     -backend-config="region=${region}"
 
 tf-plan: tf-init
 	terraform plan \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
-	-var-file="./../environments/$(ENV)/infra.tfvars"
+	-var-file="./../environments/$(ENV)/${env_name}/${app_name}.tfvars"
 
 tf-apply: tf-init
 	terraform apply -auto-approve \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
-	-var-file="./../environments/$(ENV)/infra.tfvars"
+	-var-file="./../environments/$(ENV)/${env_name}/${app_name}.tfvars"
 
 tf-destroy: tf-init
 	terraform destroy -force \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
-	-var-file="./../environments/$(ENV)/infra.tfvars"
+	-var-file="./../environments/$(ENV)/${env_name}/${app_name}.tfvars"

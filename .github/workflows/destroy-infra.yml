@@ -1,0 +1,45 @@
+name: Terraform Destroy - Infrastructure
+
+on:
+  workflow_dispatch:
+
+env:
+  ENV: demo
+
+jobs:
+  terraform-actions:
+    name: Terraform Destroy Workflow
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: terraform/tf-aws-infra
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@master
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.3
+
+      - name: Terraform Destroy
+        id: destroy
+        run: |-
+          make tf-destroy
+        continue-on-error: true
+
+      - name: 'End results'
+        shell: bash
+        run: |
+          echo apply
+          test ${{ steps.destroy.outputs.exitcode }} -eq 0

@@ -1,4 +1,4 @@
-name: Terraform Plan - Infrastructure
+name: Terraform Plan - ECS Service
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: terraform/tf-aws-infra
+        working-directory: terraform/tf-aws-service
 
     steps:
 

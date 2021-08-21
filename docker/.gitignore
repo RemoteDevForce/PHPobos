@@ -1,0 +1,7 @@
+pkg/
+.DS_Store
+.idea/
+*.swp
+code/
+!code/.gitkeep
+files/var/www/app/*

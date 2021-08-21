@@ -6,8 +6,8 @@ variable "region" {
   description = "The target AWS region."
 }
 
-variable "s3prefix" {
-  description = "An s3 bucket prefix for all your terraform state files."
+variable "app_name" {
+  description = "A unique name for your app. Used as prefix for naming AWS Resources. No spaces, special chars."
 }
 
 variable "env_name" {

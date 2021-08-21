@@ -8,11 +8,11 @@ resource "aws_key_pair" "root" {
 }
 
 resource "aws_s3_bucket" "terraform-logs" {
-  bucket = "${var.s3prefix}-${var.env_name}-tfstate-logs-${var.region}"
+  bucket = "${var.app_name}-${var.env_name}-tfstate-logs-${var.region}"
   acl = "log-delivery-write"
 
   tags = {
-    Name = "${var.s3prefix}-${var.env_name}-tfstate-logs-${var.region}"
+    Name = "${var.app_name}-${var.env_name}-tfstate-logs-${var.region}"
     ManagedBy = "Terraform"
     Environment = var.env_name
   }
@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "terraform-logs" {
 
 # The main terraform states s3 bucket
 resource "aws_s3_bucket" "terraform-states" {
-  bucket = "${var.s3prefix}-${var.env_name}-tfstate-${var.region}"
+  bucket = "${var.app_name}-${var.env_name}-tfstate-${var.region}"
   acl = "private"
 
   # This is good for just incase the file gets corrupted or something bad.
@@ -35,7 +35,7 @@ resource "aws_s3_bucket" "terraform-states" {
   }
 
   tags = {
-    Name = "${var.s3prefix}-${var.env_name}-tfstate-${var.region}"
+    Name = "${var.app_name}-${var.env_name}-tfstate-${var.region}"
     ManagedBy = "Terraform"
     Environment = var.env_name
   }

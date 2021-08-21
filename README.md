@@ -4,17 +4,17 @@ A tutorial for building an AWS ECS stack with Terraform, GitHub, and CI/CD Actio
 
 This is a mono-repo and directories are as follows:
 
-* `.github/workflows` - All the GitHub Action code.
-* `terraform` - All the terraform code for our AWS ECS Stack.
-  * `terraform/aws-init` - Start here to create ssh keys & buckets for our state files
-  * `terraform/aws-infra` - Base infrastructure for AWS such as bastion and ECS servers.
-  * `terraform/aws-service` - The ECS Service for hosting our application.
+* `.github/workflows` - All the GitHub Action code. Plan/Apply/Destroy Jobs for Infra/ECS Service. Build docker image.
 * `app` - An experimental Symfony application to create a portal on our remote lab on Phobos.
-  * `app/docker` - The dockerfiles for local & prod containers for our questionably moral 4th dimension portal opener app.
+* `docker` - The dockerfile for local & prod containers for our highly experimental 4th dimension portal opener app.
+* `terraform` - All the terraform code for our AWS ECS Stack.
+  * `terraform/tf-aws-init` - Start here to create ssh keys & buckets for our state files
+  * `terraform/tf-aws-infra` - Base infrastructure for AWS such as bastion and ECS servers.
+  * `terraform/tf-aws-service` - The ECS Service for hosting our application.
  
  ## Prerequisites
 
-These examples have only been tested on a Mac but Linux should also work.
+These examples have only been tested on a Mac but Linux should also work. Windows users can try Linux sub-shell at their own risk.
 
  ## Instructions
  
@@ -23,7 +23,11 @@ These examples have only been tested on a Mac but Linux should also work.
  * Installed Terraform v1+
  * Signed up for AWS and created an Admin IAM Account. 
  * Installed AWS-CLI and setup IAM credentials in `./aws/credentials`
- * _Optional_ - `jq` installed so the `empty-s3-bucket.sh` script can remove all objects from S3 Buckets when cleaning up AWS resources.
+ * `jq` installed locally for config loading in makefiles & the `empty-s3-bucket.sh` script.
+ 
+ ## Production Ready
+ 
+ I would recommended reviewing ALL files 
  
  ## References
  

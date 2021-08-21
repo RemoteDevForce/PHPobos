@@ -2,8 +2,8 @@ variable "env_name" {
   description = "The environment name"
 }
 
-variable "s3prefix" {
-  description = "The s3 prefix needed for storing remote tf state files"
+variable "app_name" {
+  description = "A unique name for your app. Used as prefix for naming AWS Resources. No spaces, special chars."
 }
 
 variable "region" {

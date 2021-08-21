@@ -1,0 +1,19 @@
+[{
+  "name": "${env_name}-${app_name}",
+  "image": "${image_name}:${docker_tag}",
+  "hostname": "${app_name}",
+  "memory": ${max_memory},
+  "memoryReservation": ${reserved_memory},
+  "environment": [
+    {
+      "name": "APP_NAME",
+      "value": "${app_name}"
+    }
+  ],
+  "portMappings": [{
+    "hostPort": 0,
+    "containerPort": 80,
+    "protocol": "tcp"
+  }],
+  "essential": true
+}]
