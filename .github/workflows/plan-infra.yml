@@ -73,7 +73,7 @@ jobs:
   status_output:
     name: Status Output
     runs-on: ubuntu-latest
-    needs: [tf_validation, tf_plan]
+    needs: [tf_validation,tf_plan]
 
     steps:
       - name: Comment on PR
