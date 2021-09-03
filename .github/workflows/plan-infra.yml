@@ -59,6 +59,7 @@ jobs:
   terraform-plan:
     name: TF Plan
     runs-on: ubuntu-latest
+    needs: terraform-validation
 
     steps:
       - name: Terraform Plan
