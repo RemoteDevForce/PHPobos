@@ -12,14 +12,14 @@ on:
 env:
   TF_ACTION: plan
 
-jobs:
-  terraform-actions:
-    name: Terraform Validation & Planning Workflow
-    runs-on: ubuntu-latest
+defaults:
+  run:
+    working-directory: terraform/tf-aws-service
 
-    defaults:
-      run:
-        working-directory: terraform/tf-aws-service
+jobs:
+  terraform-validation:
+    name: TF Validation
+    runs-on: ubuntu-latest
 
     steps:
       - name: debug
@@ -67,6 +67,12 @@ jobs:
         run: terraform validate -no-color
         continue-on-error: true
 
+  terraform-plan:
+    name: TF Plan
+    runs-on: ubuntu-latest
+    needs: terraform-validation
+
+    steps:
       - name: Terraform Plan
         id: plan
         run: |-
