@@ -19,12 +19,12 @@ jobs:
     steps:
       # Determine ENV based off the branch
       - name: develop - Set ENV to staging/demo
-        if: endsWith(github.event.pull_request.base.ref, '/develop')
+        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
         run: |
           echo "ENV=demo" >> $ENV
 
       - name: main - Set ENV to prod
-        if: endsWith(github.event.pull_request.base.ref, '/main')
+        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
         run: |
           echo "ENV=prod" >> $ENV
 
