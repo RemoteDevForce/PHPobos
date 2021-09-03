@@ -58,6 +58,9 @@ jobs:
 
   terraform-plan:
     name: TF Plan
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Terraform Plan
         id: plan
         run: |-
