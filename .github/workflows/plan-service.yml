@@ -22,19 +22,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: debug
-        run: |
-          more $GITHUB_EVENT_PATH
-
       - name: develop - Set ENV to staging/demo
         if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
-        run: |
-          echo "ENV=demo" >> $ENV
+        run: echo '::set-output name=ENV::demo'
 
       - name: main - Set ENV to prod
         if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
-        run: |
-          echo "ENV=prod" >> $ENV
+        run: echo '::set-output name=ENV::prod'
 
       - name: Checkout Repository
         uses: actions/checkout@master
