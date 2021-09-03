@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: develop - Set ENV to staging/demo
         if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
-        run: echo '::set-output name=ENV::demo'
+        run: echo '::set-output name=SELECTED_COLOR::green'
 
       - name: main - Set ENV to prod
         if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
