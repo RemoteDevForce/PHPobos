@@ -7,14 +7,14 @@ on:
 env:
   TF_ACTION: plan
 
-jobs:
-  terraform-actions:
-    name: Terraform Validation & Planning Workflow
-    runs-on: ubuntu-latest
+defaults:
+  run:
+    working-directory: terraform/tf-aws-infra
 
-    defaults:
-      run:
-        working-directory: terraform/tf-aws-infra
+jobs:
+  terraform-validation:
+    name: TF Validation
+    runs-on: ubuntu-latest
 
     steps:
       - name: develop - Set ENV to staging/demo
@@ -56,6 +56,8 @@ jobs:
         run: terraform validate -no-color
         continue-on-error: true
 
+  terraform-plan:
+    name: TF Plan
       - name: Terraform Plan
         id: plan
         run: |-
