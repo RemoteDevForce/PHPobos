@@ -132,8 +132,8 @@ jobs:
               body: output
             })
 
-# One day when GitHub Actions Support User Input (Blocking Steps) then we should pump the plan output file into tf apply
-            - name: Job Results
+      # One day when GitHub Actions Support User Input (Blocking Steps) then we should pump the plan output file into tf apply
+      - name: Job Results
         shell: bash
         run: |
           echo fmt
