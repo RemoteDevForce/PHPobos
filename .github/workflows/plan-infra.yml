@@ -7,20 +7,20 @@ on:
 env:
   TF_ACTION: plan
 
+defaults:
+  run:
+    working-directory: terraform/tf-aws-infra
+
 jobs:
   terraform-validation:
     name: TF Validation
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: terraform/tf-aws-infra
-
     steps:
       - name: develop - Set ENV to staging/demo
         if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
         run: |
-          echo "::set-env name=ENV::demo"
+          echo ::set-env name=ENV::demo
 
       - name: main - Set ENV to prod
         if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
