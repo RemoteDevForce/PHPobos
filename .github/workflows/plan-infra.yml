@@ -7,14 +7,21 @@ on:
 env:
   TF_ACTION: plan
 
+defaults:
+  run:
+    working-directory: terraform/tf-aws-infra
+
 jobs:
-  terraform_validation:
+  tf_validation:
     name: TF Validation
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: terraform/tf-aws-infra
+    outputs:
+      fmt_stdout: ${{ steps.fmt.outputs.stdout }}
+      fmt_exitcode: ${{ steps.fmt.outputs.exitcode }}
+      init_stdout: ${{ steps.init.outputs.stdout }}
+      init_exitcode: ${{ steps.init.outputs.exitcode }}
+      validate_stdout: ${{ steps.validate.outputs.stdout }}
+      validate_exitcode: ${{ steps.validate.outputs.exitcode }}
 
     steps:
       - name: Checkout Repository
@@ -48,14 +55,13 @@ jobs:
         run: terraform validate -no-color
         continue-on-error: true
 
-  terraform_plan:
+  tf_plan:
     name: TF Plan
     runs-on: ubuntu-latest
-    needs: terraform_validation
-
-    defaults:
-      run:
-        working-directory: terraform/tf-aws-infra
+    needs: tf_validation
+    outputs:
+      stdout: ${{ steps.plan.outputs.stdout }}
+      exitcode: ${{ steps.plan.outputs.exitcode }}
 
     steps:
       - name: Terraform Plan
@@ -67,24 +73,20 @@ jobs:
   status_output:
     name: Status Output
     runs-on: ubuntu-latest
-    needs: [terraform_validation,terraform_plan]
-
-    defaults:
-      run:
-        working-directory: terraform/tf-aws-infra
+    needs: [tf_validation, tf_plan]
 
     steps:
       - name: Comment on PR
         uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         env:
-          format_out: ${{ steps.fmt.outputs.stdout }}
+          format_out: ${{ needs.tf_validation.outputs.fmt.outputs.stdout }}
           format_err: ${{ steps.fmt.outputs.stderr }}
           init_out: ${{ steps.init.outputs.stdout }}
           init_err: ${{ steps.init.outputs.stderr }}
           validate_out: ${{ steps.validate.outputs.stdout }}
           validate_err: ${{ steps.validate.outputs.stderr }}
-          plan: "${{ steps.plan.outputs.stdout }}"
+          plan: ${{ steps.plan.outputs.stdout }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -146,10 +148,10 @@ jobs:
         shell: bash
         run: |
           echo fmt
-          test ${{ steps.fmt.outputs.exitcode }} -eq 0
+          test ${{ needs.tf_validation.outputs.fmt_exitcode }} -eq 0
           echo init
-          test ${{ steps.init.outputs.exitcode }} -eq 0
+          test ${{ needs.tf_validation.outputs.init_exitcode }} -eq 0
           echo validate
-          test ${{ steps.validate.outputs.exitcode }} -eq 0
+          test ${{ needs.tf_validation.outputs.validate_exitcode }} -eq 0
           echo plan
-          test ${{ steps.plan.outputs.exitcode }} -eq 0
+          test ${{ needs.tf_plan.outputs.exitcode }} -eq 0
