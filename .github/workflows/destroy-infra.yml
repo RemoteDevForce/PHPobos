@@ -38,7 +38,7 @@ jobs:
           make tf-destroy
         continue-on-error: true
 
-      - name: 'End results'
+      - name: Job Results
         shell: bash
         run: |
           echo apply

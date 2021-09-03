@@ -46,7 +46,7 @@ jobs:
           make tf-apply
         continue-on-error: true
 
-      - name: 'End results'
+      - name: Job Results
         shell: bash
         run: |
           echo apply
