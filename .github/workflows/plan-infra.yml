@@ -64,6 +64,16 @@ jobs:
           make tf-plan
         continue-on-error: true
 
+  status_output:
+    name: Status Output
+    runs-on: ubuntu-latest
+    needs: [terraform_validation,terraform_plan]
+
+    defaults:
+      run:
+        working-directory: terraform/tf-aws-infra
+
+    steps:
       - name: Comment on PR
         uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
@@ -132,7 +142,7 @@ jobs:
             })
 
       # One day when GitHub Actions Support User Input (Blocking Steps) then we should pump the plan output file into tf apply
-      - name: Job Results
+      - name: "Job Results"
         shell: bash
         run: |
           echo fmt
