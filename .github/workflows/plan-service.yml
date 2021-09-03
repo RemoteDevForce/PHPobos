@@ -12,11 +12,11 @@ on:
 env:
   TF_ACTION: plan
 
-defaults:
-  run:
-    working-directory: terraform/tf-aws-service
-
 jobs:
+  defaults:
+    run:
+      working-directory: terraform/tf-aws-service
+
   terraform-validation:
     name: TF Validation
     runs-on: ubuntu-latest
