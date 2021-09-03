@@ -16,8 +16,7 @@ jobs:
         working-directory: docker
 
     steps:
-
-      #Determine ENV based off the branch
+      # Determine ENV based off the branch
       - name: develop - Set ENV to staging/demo
         if: endsWith(github.ref, '/develop')
         run: |

@@ -1,10 +1,7 @@
-name: Terraform Apply - Infrastructure
+name: Demo - Terraform Apply - Infrastructure
 
 on:
   workflow_dispatch:
-
-env:
-  ENV: demo
 
 jobs:
   terraform-actions:
@@ -16,14 +13,15 @@ jobs:
         working-directory: terraform/tf-aws-infra
 
     steps:
+      - name: develop - Set ENV to staging/demo
+        if: endsWith(github.ref, '/develop')
+        run: |
+          echo "ENV=demo" >> $ENV
 
-#      - name: Set ENV
-#        run: |-
-#          if [ ${GITHUB_REF##*/} = "master" ]; then
-#            echo "ENV=staging" >> $GITHUB_ENV
-#          else
-#            echo "ENV=prod" >> $GITHUB_ENV
-#          fi
+      - name: main - Set ENV to prod
+        if: endsWith(github.ref, '/main')
+        run: |
+          echo "ENV=prod" >> $ENV
 
       - name: Checkout Repository
         uses: actions/checkout@master

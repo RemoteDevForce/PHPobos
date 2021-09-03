@@ -1,16 +1,15 @@
 name: Terraform Plan - ECS Service
 
 on:
-  push:
-    # branches:
-    #   - master
-    # tags:
-    #   - v\d+\.\d+\.\d+
-  pull_request:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Terraform Plan - Infrastructure"]
+    branches:
+      - develop
+      - main
+    types:
+      - completed
 
 env:
-  ENV: demo
   TF_ACTION: plan
 
 jobs:
@@ -23,6 +22,19 @@ jobs:
         working-directory: terraform/tf-aws-service
 
     steps:
+      - name: debug
+        run: |
+          more $GITHUB_EVENT_PATH
+
+      - name: develop - Set ENV to staging/demo
+        if: endsWith(github.event.workflow_run.base.ref, '/develop')
+        run: |
+          echo "ENV=demo" >> $ENV
+
+      - name: main - Set ENV to prod
+        if: endsWith(github.event.workflow_run.base.ref, '/main')
+        run: |
+          echo "ENV=prod" >> $ENV
 
       - name: Checkout Repository
         uses: actions/checkout@master

@@ -1,4 +1,4 @@
-name: Terraform Destroy - Infrastructure
+name: Demo - Terraform Destroy - Infrastructure
 
 on:
   workflow_dispatch:

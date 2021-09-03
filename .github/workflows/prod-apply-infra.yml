@@ -1,0 +1,59 @@
+name: Prod - Terraform Apply - Infrastructure
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-actions:
+    name: Terraform Apply Workflow
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: terraform/tf-aws-infra
+
+    steps:
+      - name: develop - Set ENV to staging/demo
+        if: endsWith(github.ref, '/develop')
+        run: |
+          echo "ENV=demo" >> $ENV
+
+      - name: main - Set ENV to prod
+        if: endsWith(github.ref, '/main')
+        run: |
+          echo "ENV=prod" >> $ENV
+
+      - name: Checkout Repository
+        uses: actions/checkout@master
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.3
+
+      - name: Terraform Apply
+        id: apply
+        run: |-
+          make tf-apply
+        continue-on-error: true
+
+      - name: Job Results
+        shell: bash
+        run: |
+          echo apply
+          test ${{ steps.apply.outputs.exitcode }} -eq 0
+
+# Uncomment and setup your webhook as a secret to send messages to your team when deploys finish
+#      - name: Slack Notification
+#        uses: rtCamp/action-slack-notify@v2
+#        env:
+#          SLACK_MESSAGE: ${{join(steps.apply.outputs.*, '\n')}}
+#          SLACK_TITLE: CI Test Suite
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
