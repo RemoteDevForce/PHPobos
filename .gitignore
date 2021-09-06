@@ -3,7 +3,7 @@
 
 # .tfstate files
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
 
 # Crash log files
 crash.log
