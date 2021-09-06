@@ -2,25 +2,15 @@ provider "aws" {
   region = var.region
 }
 
+# Keys are tied to a AWS region
 resource "aws_key_pair" "root" {
   key_name = "root-${var.env_name}-${var.region}-ssh-key"
   public_key = file(var.ssh_key_path)
 }
 
-resource "aws_s3_bucket" "terraform-logs" {
-  bucket = "${var.app_name}-${var.env_name}-tfstate-logs-${var.region}"
-  acl = "log-delivery-write"
-
-  tags = {
-    Name = "${var.app_name}-${var.env_name}-tfstate-logs-${var.region}"
-    ManagedBy = "Terraform"
-    Environment = var.env_name
-  }
-}
-
 # The main terraform states s3 bucket
 resource "aws_s3_bucket" "terraform-states" {
-  bucket = "${var.app_name}-${var.env_name}-tfstate-${var.region}"
+  bucket = "${var.env_name}-${var.region}-${var.app_name}-tfstate"
   acl = "private"
 
   # This is good for just incase the file gets corrupted or something bad.
@@ -35,8 +25,24 @@ resource "aws_s3_bucket" "terraform-states" {
   }
 
   tags = {
-    Name = "${var.app_name}-${var.env_name}-tfstate-${var.region}"
+    Name = "${var.env_name}-${var.region}-${var.app_name}-tfstate"
     ManagedBy = "Terraform"
-    Environment = var.env_name
+    Env = var.env_name
+    App = var.app_name
+    Region = var.region
+  }
+}
+
+# This terraform bucket is an audit log of anything that happens to the state bucket
+resource "aws_s3_bucket" "terraform-logs" {
+  bucket = "${var.env_name}-${var.region}-${var.app_name}-tfstate-logs"
+  acl = "log-delivery-write"
+
+  tags = {
+    Name = "${var.env_name}-${var.region}-${var.app_name}-tfstate-logs"
+    ManagedBy = "Terraform"
+    Env = var.env_name
+    App = var.app_name
+    Region = var.region
   }
 }
