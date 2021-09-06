@@ -1,24 +1,28 @@
-name: Demo - Terraform Destroy - Infrastructure
+name: Terraform Destroy - Infrastructure
 
 on:
   workflow_dispatch:
 
-env:
-  ENV: demo
+defaults:
+  run:
+    working-directory: terraform/tf-aws-infra
 
 jobs:
-  terraform-actions:
-    name: Terraform Destroy Workflow
+  tf_destroy:
+    name: TF Destroy
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: terraform/tf-aws-infra
-
     steps:
+      - name: develop - Set ENV to demo
+        if: endsWith(github.ref, '/develop')
+        run: echo '::set-output name=ENV::demo'
+
+      - name: main - Set ENV to prod
+        if: endsWith(github.ref, '/main')
+        run: echo '::set-output name=ENV::prod'
 
       - name: Checkout Repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -34,12 +38,10 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        run: |-
-          make tf-destroy
+        run: make tf-destroy
         continue-on-error: true
 
       - name: Job Results
-        shell: bash
         run: |
           echo apply
           test ${{ steps.destroy.outputs.exitcode }} -eq 0

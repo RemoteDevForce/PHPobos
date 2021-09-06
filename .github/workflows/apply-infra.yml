@@ -42,7 +42,6 @@ jobs:
         continue-on-error: true
 
       - name: Job Results
-        shell: bash
         run: |
           echo apply
           test ${{ steps.apply.outputs.exitcode }} -eq 0
