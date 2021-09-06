@@ -1,5 +1,4 @@
 name: 1 - Terraform Plan - Infrastructure
-id: tf_plan_infra
 
 on:
   workflow_dispatch:
