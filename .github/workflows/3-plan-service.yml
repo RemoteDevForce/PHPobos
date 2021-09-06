@@ -1,4 +1,4 @@
-name: Terraform Plan - ECS Service
+name: 3 - Terraform Plan - ECS Service
 
 on:
   workflow_run:
