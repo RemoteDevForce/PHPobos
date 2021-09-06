@@ -23,6 +23,6 @@ tf-apply: tf-init
 	-var-file="./../environments/$(ENV)/${env_name}/${app_name}.tfvars"
 
 tf-destroy: tf-init
-	terraform destroy -force \
+	terraform destroy -auto-approve \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
 	-var-file="./../environments/$(ENV)/${env_name}/${app_name}.tfvars"
