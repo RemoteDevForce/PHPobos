@@ -60,14 +60,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: tf_validation
     outputs:
-      stdout: ${{ steps.plan.outputs.stdout }}
-      exitcode: ${{ steps.plan.outputs.exitcode }}
+      plan_stdout: ${{ steps.plan.outputs.stdout }}
+      plan_exitcode: ${{ steps.plan.outputs.exitcode }}
 
     steps:
       - name: Terraform Plan
         id: plan
-        run: |-
-          make tf-plan
+        run: make tf-plan
         continue-on-error: true
 
   status_output:
@@ -80,13 +79,13 @@ jobs:
         uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         env:
-          format_out: ${{ needs.tf_validation.outputs.fmt.outputs.stdout }}
-          format_err: ${{ steps.fmt.outputs.stderr }}
-          init_out: ${{ steps.init.outputs.stdout }}
-          init_err: ${{ steps.init.outputs.stderr }}
-          validate_out: ${{ steps.validate.outputs.stdout }}
-          validate_err: ${{ steps.validate.outputs.stderr }}
-          plan: ${{ steps.plan.outputs.stdout }}
+          format_out: ${{ needs.tf_validation.outputs.fmt_stdout }}
+          format_err: ${{ needs.tf_validation.outputs.fmt_stderr }}
+          init_out: ${{ needs.tf_validation.outputs.init_stdout }}
+          init_err: ${{ needs.tf_validation.outputs.init_stderr }}
+          validate_out: ${{ needs.tf_validation.outputs.init_stdout }}
+          validate_err: ${{ needs.tf_validation.outputs.init_stderr }}
+          plan: ${{ needs.tf_plan.outputs.plan_stdout }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -135,7 +134,7 @@ jobs:
             ${ process.env.plan }
             ${ CODE_BLOCK }
             </details>
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ github.workspace }}\`, Workflow: \`${{ github.workflow }}\`*`;
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -154,4 +153,4 @@ jobs:
           echo validate
           test ${{ needs.tf_validation.outputs.validate_exitcode }} -eq 0
           echo plan
-          test ${{ needs.tf_plan.outputs.exitcode }} -eq 0
+          test ${{ needs.tf_plan.outputs.plan_exitcode }} -eq 0
