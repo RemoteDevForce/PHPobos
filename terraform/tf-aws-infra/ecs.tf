@@ -1,6 +1,11 @@
 # Elastic Container Service
 resource "aws_ecs_cluster" "ecs" {
   name = "${var.env_name}-${var.region}-ecs"
+
+  setting = {
+    name  = "containerInsights"
+    value = "disabled"
+  }
 }
 
 # Launch configuration used by ASG

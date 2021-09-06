@@ -2,7 +2,7 @@ name: Terraform Plan - ECS Service
 
 on:
   workflow_run:
-    workflows: ["Terraform Plan - Infrastructure"]
+    workflows: [tf_plan_infra]
     branches:
       - develop
       - main
