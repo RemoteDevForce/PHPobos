@@ -152,5 +152,5 @@ jobs:
           test ${{ needs.tf_validation.outputs.init_exitcode }} -eq 0
           echo validate
           test ${{ needs.tf_validation.outputs.validate_exitcode }} -eq 0
-          echo plan
-          test ${{ needs.tf_plan.outputs.plan_exitcode }} -eq 0
+#          echo plan
+#          test ${{ needs.tf_plan.outputs.plan_exitcode }} -eq 0
