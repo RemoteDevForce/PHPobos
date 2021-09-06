@@ -22,6 +22,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: develop - Set ENV to staging/demo
         if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
         run: echo '::set-output name=ENV::demo'
@@ -30,10 +33,7 @@ jobs:
         if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
         run: echo '::set-output name=ENV::prod'
 
-      - name: Checkout Repository
-        uses: actions/checkout@master
-
-      - name: Configure AWS Credentials
+        - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

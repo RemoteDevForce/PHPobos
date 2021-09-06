@@ -1,4 +1,4 @@
-name: Terraform Plan - Infrastructure
+name: 1 - Terraform Plan - Infrastructure
 
 on:
   workflow_dispatch:

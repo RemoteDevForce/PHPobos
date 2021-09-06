@@ -1,4 +1,4 @@
-name: Terraform Apply - Infrastructure
+name: 2 - Terraform Apply - Infrastructure
 
 on:
   workflow_dispatch:

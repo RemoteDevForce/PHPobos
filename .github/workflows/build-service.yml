@@ -1,4 +1,4 @@
-name: Docker Build - ECS Service
+name: 3 - Docker Build - ECS Service
 
 on:
   push:
@@ -6,29 +6,26 @@ on:
       - develop
       - main
 
+defaults:
+  run:
+    working-directory: docker
+
 jobs:
   build-actions:
     name: Build Docker Image - ECS Service
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: docker
-
     steps:
-      # Determine ENV based off the branch
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: develop - Set ENV to staging/demo
-        if: endsWith(github.ref, '/develop')
-        run: |
-          echo "ENV=demo" >> $ENV
+        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
+        run: echo '::set-output name=ENV::demo'
 
       - name: main - Set ENV to prod
-        if: endsWith(github.ref, '/main')
-        run: |
-          echo "ENV=prod" >> $ENV
-
-      - name: Checkout Repository
-        uses: actions/checkout@master
+        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
+        run: echo '::set-output name=ENV::prod'
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

@@ -1,6 +1,6 @@
 # You should probably do more to protect this from running
 # This is here for demo purposes, read the .github/CODEOWNERS for more info on permissions
-name: Terraform Destroy - Infrastructure
+name: 7 - Terraform Destroy - Infrastructure
 
 on:
   workflow_dispatch:
