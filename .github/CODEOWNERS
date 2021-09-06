@@ -1,1 +1,9 @@
+#Read more about code owner files
+#https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners
+#https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/disabling-or-limiting-github-actions-for-a-repository
+
+# The following only allows me (OGP) to edit the workflows
 .github/workflows @ogprogrammer
+
+#There are ways to do protect the directory via a whole team
+#You also should use protected branches to prevent pushing/running via bad actor
