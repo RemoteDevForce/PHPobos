@@ -2,7 +2,7 @@
 resource "aws_ecs_cluster" "ecs" {
   name = "${var.env_name}-${var.region}-ecs"
 
-  setting = {
+  setting {
     name  = "containerInsights"
     value = "disabled"
   }
