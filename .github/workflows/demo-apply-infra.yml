@@ -1,30 +1,28 @@
-name: Demo - Terraform Apply - Infrastructure
+name: Terraform Apply - Infrastructure
 
 on:
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: terraform/tf-aws-infra
+
 jobs:
-  terraform-actions:
+  tf_apply:
     name: Terraform Apply Workflow
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: terraform/tf-aws-infra
 
     steps:
       - name: develop - Set ENV to staging/demo
         if: endsWith(github.ref, '/develop')
-        run: |
-          echo "ENV=demo" >> $ENV
+        run: echo '::set-output name=ENV::demo'
 
       - name: main - Set ENV to prod
         if: endsWith(github.ref, '/main')
-        run: |
-          echo "ENV=prod" >> $ENV
+        run: echo '::set-output name=ENV::prod'
 
       - name: Checkout Repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -40,8 +38,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: |-
-          make tf-apply
+        run: make tf-apply
         continue-on-error: true
 
       - name: Job Results
