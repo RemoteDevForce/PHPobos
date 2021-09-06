@@ -144,7 +144,6 @@ jobs:
 
       # One day when GitHub Actions Support User Input (Blocking Steps) then we should pump the plan output file into tf apply
       - name: "Job Results"
-        shell: bash
         run: |
           echo fmt
           test ${{ needs.tf_validation.outputs.fmt_exitcode }} -eq 0
