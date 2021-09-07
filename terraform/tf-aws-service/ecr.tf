@@ -11,6 +11,6 @@ resource "aws_ecr_repository" "app" {
     Name = "${var.env_name}-${var.app_name}-ecr"
     Env = var.env_name
     App = var.app_name
+    Region      = var.region
   }
 }
-// @todo encryption_configuration

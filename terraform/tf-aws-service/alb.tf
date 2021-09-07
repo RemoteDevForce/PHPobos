@@ -11,6 +11,7 @@ resource "aws_alb" "alb" {
     Name = "${var.env_name}-${var.app_name}"
     Env = var.env_name
     App = var.app_name
+    Region      = var.region
   }
 }
 
@@ -24,6 +25,7 @@ resource "aws_alb_target_group" "application" {
     Name = "${var.env_name}-${var.app_name}"
     Env = var.env_name
     App = var.app_name
+    Region      = var.region
   }
 }
 
@@ -75,5 +77,6 @@ resource "aws_security_group" "alb-application" {
     Name = "${var.env_name}-${var.app_name}-alb-sg"
     Env = var.env_name
     App = var.app_name
+    Region      = var.region
   }
 }

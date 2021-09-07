@@ -1,14 +1,14 @@
-ENV?=demo
+ENV?=staging
 
 app_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.app_name')
 env_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.env_name')
 region=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.region')
-remote_tfstate_bucket=${env_name}-${app_name}-tfstate-${region}
+remote_tfstate_bucket=${env_name}-${app_name}-${region}-tfstate
 
 tf-init:
 	terraform init \
     -backend-config="bucket=${remote_tfstate_bucket}" \
-    -backend-config="key=${env_name}/${app_name}-ecs-service.tfstate" \
+    -backend-config="key=ecs-service.tfstate" \
     -backend-config="region=${region}"
 
 tf-plan: tf-init
