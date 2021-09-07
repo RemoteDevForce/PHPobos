@@ -16,8 +16,6 @@ This is a mono-repo and directories are as follows:
 
 These examples have only been tested on a Mac but Linux should also work. Windows users can try Linux sub-shell at their own risk.
 
- ## Instructions
- 
  First make sure you have done the following:
  
  * Installed Terraform v1+
@@ -25,9 +23,17 @@ These examples have only been tested on a Mac but Linux should also work. Window
  * Installed AWS-CLI and setup IAM credentials in `./aws/credentials`
  * `jq` installed locally for config loading in makefiles & the `empty-s3-bucket.sh` script.
  
+ ## Instructions
+ 
+ 1. Configure your IAM credentials in `.aws/credentials`
+ 1. `cd` into the `terraform/tf-aws-init` and run `make tf-plan-staging`
+ 1. If things look good, run `make tf-apply-staging` to create the backend tf state s3 buckets.
+ 
  ## Production Ready
  
- I would recommended reviewing ALL files 
+ I would recommended reviewing ALL files.
+ 
+ * Add TF state locking via DynamoDB - [read more](https://www.terraform.io/docs/language/settings/backends/s3.html)
  
  ## References
  
