@@ -74,6 +74,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: develop - Set ENV to staging
+        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
+        run: echo "ENV=staging" >> $GITHUB_ENV
+
+      - name: main - Set ENV to prod
+        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
+        run: echo "ENV=prod" >> $GITHUB_ENV
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -99,18 +107,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.0.3
 
       - name: Comment on PR
         uses: actions/github-script@0.9.0
