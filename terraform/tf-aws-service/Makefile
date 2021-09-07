@@ -1,5 +1,4 @@
 ENV?=demo
-APP_NAME?=portal
 
 app_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.app_name')
 env_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.env_name')

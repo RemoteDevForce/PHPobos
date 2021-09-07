@@ -4,8 +4,16 @@ provider "aws" {
 
 # Keys are tied to a AWS region
 resource "aws_key_pair" "root" {
-  key_name = "root-${var.env_name}-${var.region}-ssh-key"
+  key_name = "root-${var.env_name}-${var.app_name}-ssh-key"
   public_key = file(var.ssh_key_path)
+
+  tags = {
+    Name = "root-${var.env_name}-${var.app_name}-ssh-key"
+    ManagedBy = "Terraform"
+    Env = var.env_name
+    App = var.app_name
+    Region = var.region
+  }
 }
 
 # The main terraform states s3 bucket

@@ -5,6 +5,9 @@
 *.tfstate
 *.tfstate.*
 
+# feel free to remove this to commit the tf lock file
+.terraform.lock.hcl
+
 # Crash log files
 crash.log
 

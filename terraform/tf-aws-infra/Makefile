@@ -3,7 +3,7 @@ ENV?=demo
 app_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.app_name')
 env_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.env_name')
 region=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.region')
-remote_tfstate_bucket=${env_name}-${app_name}-tfstate-${region}
+remote_tfstate_bucket=${env_name}-${app_name}-${region}-tfstate
 
 tf-init:
 	terraform init \
