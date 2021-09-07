@@ -27,11 +27,11 @@ jobs:
 
       - name: develop - Set ENV to staging
         if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
-        run: echo '::set-output name=ENV::staging'
+        run: echo "ENV=staging" >> $ENV
 
       - name: main - Set ENV to prod
         if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
-        run: echo '::set-output name=ENV::prod'
+        run: echo "ENV=prod" >> $ENV
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
