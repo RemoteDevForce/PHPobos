@@ -1,11 +1,14 @@
-ENV?=demo
-
 app_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.app_name')
 env_name=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.env_name')
 region=$(shell cat ./../environments/$(ENV)/config.tfvars.json | jq -r '.region')
 remote_tfstate_bucket=${env_name}-${app_name}-${region}-tfstate
 
-tf-init:
+chk-env:
+ifndef ENV
+	$(error ENV is undefined)
+endif
+
+tf-init: chk-env
 	terraform init \
     -backend-config="bucket=${remote_tfstate_bucket}" \
     -backend-config="key=infrastructure.tfstate" \
