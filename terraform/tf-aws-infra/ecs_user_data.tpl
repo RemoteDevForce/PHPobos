@@ -1,6 +1,6 @@
 #!/bin/bash
 # Set the cluster name
-echo ECS_CLUSTER=${env_name}-${var.app_name}-${region}-ecs >> /etc/ecs/ecs.config
+echo ECS_CLUSTER=${env_name}-${app_name}-${region}-ecs >> /etc/ecs/ecs.config
 
 # Delete stopped containers every 15mins
 #echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=15m >> /etc/ecs/ecs.config
