@@ -1,6 +1,6 @@
 # Elastic Container Service
 resource "aws_ecs_cluster" "ecs" {
-  name = "${var.env_name}-${var.region}-ecs"
+  name = "${var.env_name}-${var.app_name}-ecs"
 
   setting {
     name  = "containerInsights"
@@ -10,12 +10,13 @@ resource "aws_ecs_cluster" "ecs" {
 
 # Launch configuration used by ASG
 resource "aws_launch_configuration" "ecs-lc" {
-  name_prefix   = "${var.env_name}-${var.region}-ecs-lc-"
+  name_prefix   = "${var.env_name}-${var.app_name}-ecs-lc-"
   image_id      = lookup(var.amazon_ecs_amis, var.region)
   instance_type = var.ecs_instance_type
-  key_name      = "root-${var.env_name}-${var.region}-ssh-key"
+  key_name      = "root-${var.env_name}-${var.app_name}-ssh-key"
   security_groups = [
-  aws_security_group.ecs.id]
+    aws_security_group.ecs.id
+  ]
   iam_instance_profile        = aws_iam_role.ecs_iam_role.name
   associate_public_ip_address = false
   user_data                   = data.template_file.userdata.rendered
@@ -24,18 +25,19 @@ resource "aws_launch_configuration" "ecs-lc" {
     create_before_destroy = true
   }
   depends_on = [
-  aws_ecs_cluster.ecs]
+    aws_ecs_cluster.ecs
+  ]
 }
 
 # IAM
 resource "aws_iam_instance_profile" "ecs_profile" {
-  name = "${var.env_name}-${var.region}-ecs-role"
+  name = "${var.env_name}-${var.app_name}-${var.region}-ecs-role"
   role = aws_iam_role.ecs_iam_role.name
 }
 
 # A shared IAM role for jenkins which has two policy documents attached. IAM stuff & ECS EC2 Role.
 resource "aws_iam_role" "ecs_iam_role" {
-  name               = "${var.env_name}-${var.region}-ecs-role"
+  name               = "${var.env_name}-${var.app_name}-${var.region}-ecs-role"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.assume-role-policy.json
 }
@@ -51,13 +53,14 @@ data "template_file" "userdata" {
 
   vars = {
     env_name = var.env_name
+    app_name = var.app_name
     region   = var.region
   }
 }
 
 # SG
 resource "aws_security_group" "ecs" {
-  name        = "${var.env_name}-${var.region}-ecs-sg"
+  name        = "${var.env_name}-${var.app_name}-${var.region}-ecs-sg"
   description = "Container Instance Allowed Ports"
   vpc_id      = module.vpc.vpc_id
 
@@ -66,7 +69,8 @@ resource "aws_security_group" "ecs" {
     to_port   = 65535
     protocol  = "tcp"
     cidr_blocks = [
-    "0.0.0.0/0"]
+      "0.0.0.0/0"
+    ]
   }
 
   ingress {
@@ -74,7 +78,8 @@ resource "aws_security_group" "ecs" {
     to_port   = 65535
     protocol  = "udp"
     cidr_blocks = [
-    "0.0.0.0/0"]
+      "0.0.0.0/0"
+    ]
   }
 
   egress {
@@ -82,13 +87,16 @@ resource "aws_security_group" "ecs" {
     to_port   = 0
     protocol  = "-1"
     cidr_blocks = [
-    "0.0.0.0/0"]
+      "0.0.0.0/0"
+    ]
   }
 
   tags = {
-    Name        = "${var.env_name}-${var.region}-ecs-sg"
+    Name        = "${var.env_name}-${var.app_name}-${var.region}-ecs-sg"
     ManagedBy   = "Terraform"
     Environment = var.env_name
+    App         = var.app_name
+    Region      = var.region
   }
 
   lifecycle {
@@ -98,7 +106,7 @@ resource "aws_security_group" "ecs" {
 
 # ASG
 resource "aws_autoscaling_policy" "ecs-scale-up" {
-  name                   = "${var.env_name}-${var.region}-ecs-policy-up"
+  name                   = "${var.env_name}-${var.app_name}-${var.region}-ecs-policy-up"
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -106,7 +114,7 @@ resource "aws_autoscaling_policy" "ecs-scale-up" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs-alarm-up" {
-  alarm_name                = "${var.env_name}-${var.region}-ecs-mem-high"
+  alarm_name                = "${var.env_name}-${var.app_name}-${var.region}-ecs-mem-high"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = "1"
   metric_name               = "MemoryReservation"
@@ -117,17 +125,19 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alarm-up" {
   alarm_description         = "This metric monitors ECS RAM utilization"
   insufficient_data_actions = []
   alarm_actions = [
-  aws_autoscaling_policy.ecs-scale-up.arn]
+    aws_autoscaling_policy.ecs-scale-up.arn
+  ]
   dimensions = {
     ClusterName = aws_ecs_cluster.ecs.name
   }
 
   depends_on = [
-  aws_autoscaling_policy.ecs-scale-up]
+    aws_autoscaling_policy.ecs-scale-up
+  ]
 }
 
 resource "aws_autoscaling_policy" "ecs-scale-down" {
-  name                   = "${var.env_name}-${var.region}-ecs-policy-down"
+  name                   = "${var.env_name}-${var.app_name}-${var.region}-ecs-policy-down"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -135,7 +145,7 @@ resource "aws_autoscaling_policy" "ecs-scale-down" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "ecs-alarm-down" {
-  alarm_name                = "${var.env_name}-${var.region}-ecs-mem-low"
+  alarm_name                = "${var.env_name}-${var.app_name}-${var.region}-ecs-mem-low"
   comparison_operator       = "LessThanThreshold"
   evaluation_periods        = "1"
   metric_name               = "MemoryReservation"
@@ -146,7 +156,8 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alarm-down" {
   alarm_description         = "This metric monitors ECS RAM utilization"
   insufficient_data_actions = []
   alarm_actions = [
-  aws_autoscaling_policy.ecs-scale-down.arn]
+    aws_autoscaling_policy.ecs-scale-down.arn
+  ]
   dimensions = {
     ClusterName = aws_ecs_cluster.ecs.name
   }
@@ -159,7 +170,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alarm-down" {
 
 resource "aws_autoscaling_group" "ecs-asg" {
   vpc_zone_identifier  = module.vpc.private_subnets
-  name                 = "${var.env_name}-${var.region}-ecs-asg"
+  name                 = "${var.env_name}-${var.app_name}-${var.region}-ecs-asg"
   max_size             = var.asg_max
   min_size             = var.asg_min
   desired_capacity     = var.asg_desired
@@ -169,7 +180,7 @@ resource "aws_autoscaling_group" "ecs-asg" {
 
   tag {
     key                 = "Name"
-    value               = "${var.env_name}-${var.region}-ecs-asg"
+    value               = "${var.env_name}-${var.app_name}-${var.region}-ecs-asg"
     propagate_at_launch = "true"
   }
 
@@ -178,5 +189,6 @@ resource "aws_autoscaling_group" "ecs-asg" {
   }
 
   depends_on = [
-  aws_launch_configuration.ecs-lc]
+    aws_launch_configuration.ecs-lc
+  ]
 }

@@ -8,14 +8,11 @@ This terraform script will create a VPC + Bastion Instance + ECS Cluster
 
 This should only really be called from your GitHub Action but you can call it locally if testing.
 
-To Plan/apply
+To Plan/apply/destroy
 ```
-make tf-action
-#check plan looks good
-TF_ACTION=apply make tf-action
-
-#to destroy, run:
-TF_ACTION=destroy make tf-action
+make tf-plan
+make tf-apply
+make tf-destroy
 ```
 
 ### How to hop to an ECS Agent Instance
@@ -31,4 +28,4 @@ Then head over to you [EC2 Dashboard](https://us-west-2.console.aws.amazon.com/e
 
 SSH to bastion `ssh ec2-user@bastion.ip.address.here` and then once on the server, SSH to the private ip of the ECS EC2 Instance `ssh ec2-user@ecs.instance.ip.here`
 
-Then you can run `docker ps` once there to make sure you see the ecs-agent running.
+Then you can run `docker ps` once on an ECS Host to make sure you see the ecs-agent running.

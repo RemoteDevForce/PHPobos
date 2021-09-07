@@ -1,7 +1,7 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "${var.env_name}-${var.region}-vpc"
+  name = "${var.env_name}-${var.app_name}-${var.region}-vpc"
 
   cidr                   = var.cidr
   private_subnets        = split(",", var.private_subnets)
@@ -16,7 +16,9 @@ module "vpc" {
 
   tags = {
     "ManagedBy"   = "Terraform"
-    "Name"        = "${var.env_name}-${var.region}-vpc"
+    "Name"        = "${var.env_name}-${var.app_name}-${var.region}-vpc"
     "Environment" = var.env_name
+    App           = var.app_name
+    Region        = var.region
   }
 }

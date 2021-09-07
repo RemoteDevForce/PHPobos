@@ -1,6 +1,6 @@
 #!/bin/bash
 # Set the cluster name
-echo ECS_CLUSTER=${env_name}-${region}-ecs >> /etc/ecs/ecs.config
+echo ECS_CLUSTER=${env_name}-${var.app_name}-${region}-ecs >> /etc/ecs/ecs.config
 
 # Delete stopped containers every 15mins
 #echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=15m >> /etc/ecs/ecs.config
@@ -18,4 +18,4 @@ echo ECS_CLUSTER=${env_name}-${region}-ecs >> /etc/ecs/ecs.config
 #echo ECS_AVAILABLE_LOGGING_DRIVERS=["json-file","awslogs"] >> /etc/ecs/ecs.config
 #echo ECS_LOGLEVEL=info >> /etc/ecs/ecs.config
 
-yum install -y aws-cfn-bootstrap wget aws-cli jq git
+#yum install -y aws-cfn-bootstrap wget aws-cli jq git
