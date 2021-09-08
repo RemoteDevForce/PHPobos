@@ -9,6 +9,7 @@ RUN docker-php-source extract \
     && apt-get -y --no-install-recommends install \
         nginx \
         vim \
+        zip \
         make \
         htop \
         nano \
@@ -20,6 +21,7 @@ RUN docker-php-source extract \
     && docker-php-ext-install \
         pdo_mysql \
         bcmath \
+        zip \
         intl \
         opcache \
     && docker-php-source delete \
