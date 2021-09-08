@@ -49,7 +49,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           # Keep in sync with terraform/tf-aws-service/ecr.tf ecr->name - also build release file job below
-          ENV: ${{ env.ENV }}-${{ env.APP_NAME }}-ecr
+          ECR_REPOSITORY: ${{ env.ENV }}-${{ env.APP_NAME }}-ecr
           IMAGE_TAG: ${{ github.sha }}
 
       - name: Job Results
