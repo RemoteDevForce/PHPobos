@@ -17,7 +17,7 @@ RUN docker-php-source extract \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
-        libzip \
+        libzip-dev \
     # PHP Extensions
     && docker-php-ext-install \
         pdo_mysql \
