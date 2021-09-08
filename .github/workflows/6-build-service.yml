@@ -55,3 +55,18 @@ jobs:
           test ${{ steps.login-ecr.outputs.exitcode }} -eq 0
           echo init
           test ${{ steps.build-and-push.outputs.exitcode }} -eq 0
+
+      - name: Build Last Build Release File
+        shell: bash
+        run: |
+          echo last-${{ env.ENV }}-build
+          touch last-build
+          echo ${{ github.sha }} > last-${{ env.ENV }}-build
+
+      - name: Upload Release Version Tag
+        uses: actions/upload-artifact@v2
+        with:
+          name: last-${{ env.ENV }}-build
+          path: last-build
+          # 90 days is the max, if you don't release this often then change this to persist the last build somewhere.
+          retention-days: 90

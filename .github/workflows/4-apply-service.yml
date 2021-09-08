@@ -9,7 +9,7 @@ defaults:
 
 jobs:
   tf_apply:
-    name: Terraform Apply Workflow
+    name: TF Apply
     runs-on: ubuntu-latest
 
     steps:

@@ -37,6 +37,7 @@ I would recommended reviewing ALL files. A few things I can think of are:
  * Add SSL to ALB
  * Add Encryption to ECR
  * Add an RDS config in tf-aws-infra
+ * Blue/Green Deployment (faster rollback)
  
 ## References
  
