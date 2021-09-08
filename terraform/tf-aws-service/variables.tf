@@ -34,7 +34,7 @@ variable "service_desired" {
   default = 2
 }
 variable "delete_protection" {
-   default = false
+  default = false
 }
 variable "cpu_scale_up" {
   default = 80

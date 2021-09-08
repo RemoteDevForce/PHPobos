@@ -78,6 +78,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: develop - Set ENV to staging
+        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
+        run: echo "ENV=staging" >> $GITHUB_ENV
+
+      - name: main - Set ENV to prod
+        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
+        run: echo "ENV=prod" >> $GITHUB_ENV
+
+      - name: Download release info
+        uses: actions/download-artifact@v2
+        with:
+          name: last-${{ env.ENV }}-build
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
