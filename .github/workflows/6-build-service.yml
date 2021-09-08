@@ -30,7 +30,7 @@ jobs:
 
       - name: Get App Name
         shell: bash
-        run: cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name' >> $GITHUB_APP_NAME
+        run: echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
