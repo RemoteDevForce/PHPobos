@@ -14,14 +14,14 @@ tf-init:
 tf-plan: tf-init
 	terraform plan \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
-	-var-file="./../environments/$(ENV)/${env_name}/${app_name}.tfvars"
+	-var-file="./../environments/$(ENV)/${app_name}.tfvars"
 
 tf-apply: tf-init
 	terraform apply -auto-approve \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
-	-var-file="./../environments/$(ENV)/${env_name}/${app_name}.tfvars"
+	-var-file="./../environments/$(ENV)/${app_name}.tfvars"
 
 tf-destroy: tf-init
 	terraform destroy -auto-approve \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
-	-var-file="./../environments/$(ENV)/${env_name}/${app_name}.tfvars"
+	-var-file="./../environments/$(ENV)/${app_name}.tfvars"
