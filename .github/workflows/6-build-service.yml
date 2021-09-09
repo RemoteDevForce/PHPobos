@@ -76,7 +76,5 @@ jobs:
 
       - name: Job Results
         run: |
-          echo login_ecr
-          test ${{ steps.ecrlogin.outputs.exitcode }} -eq 0
-          echo build_and_push
+          echo apply
           test ${{ steps.buildpush.outputs.exitcode }} -eq 0
