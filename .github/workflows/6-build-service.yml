@@ -41,6 +41,7 @@ jobs:
       - name: Login to Amazon ECR
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@v1
+        continue-on-error: true
 
       - name: Build & Push Docker Image to ECR
         id: build_and_push
@@ -50,6 +51,7 @@ jobs:
           # Keep in sync with terraform/tf-aws-service/ecr.tf ecr->name - also build release file job below
           ECR_REPOSITORY: ${{ env.ENV }}-${{ env.APP_NAME }}-ecr
           IMAGE_TAG: ${{ github.sha }}
+        continue-on-error: true
 
       - name: Build Last Build Release File
         run: |
