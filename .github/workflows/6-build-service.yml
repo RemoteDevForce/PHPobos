@@ -15,9 +15,9 @@ jobs:
   build-actions:
     name: Build Docker Image - ECS Service
     runs-on: ubuntu-latest
-#    outputs:
-#      login_ecr_exitcode: ${{ steps.login_ecr.outputs.exitcode }}
-#      build_and_push_exitcode: ${{ steps.build_and_push.outputs.exitcode }}
+    outputs:
+      login_ecr_exitcode: ${{ steps.login_ecr.outputs.exitcode }}
+      build_and_push_exitcode: ${{ steps.build_and_push.outputs.exitcode }}
 
     steps:
       - name: Checkout Repository
@@ -32,7 +32,6 @@ jobs:
         run: echo "ENV=prod" >> $GITHUB_ENV
 
       - name: Get App Name
-        shell: bash
         run: echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
@@ -56,7 +55,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
 
       - name: Build Last Build Release File
-        shell: bash
         run: |
           touch last-${{ env.ENV }}-build.tfvars
           echo 'docker_tag = "${{ github.sha }}"' >> last-${{ env.ENV }}-build.tfvars
@@ -71,9 +69,8 @@ jobs:
           retention-days: 90
 
       - name: Job Results
-        shell: bash
         run: |
           echo login_ecr
-          test ${{ jobs.login_ecr.outputs.login_ecr_exitcode }} -eq 0
+          test ${{ steps.login_ecr.outputs.exitcode }} -eq 0
           echo build_and_push
-          test ${{ jobs.build_and_push.outputs.build_and_push_exitcode }} -eq 0
+          test ${{ steps.build_and_push.outputs.exitcode }} -eq 0
