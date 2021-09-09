@@ -12,7 +12,7 @@ defaults:
     working-directory: docker
 
 jobs:
-  build-actions:
+  build_actions:
     name: Build Docker Image - ECS Service
     runs-on: ubuntu-latest
 
@@ -66,14 +66,14 @@ jobs:
           retention-days: 90
 
 # Very helpful to see what is available to you
-#      - name: Dump steps context
-#        env:
-#          STEPS_CONTEXT: ${{ toJson(steps) }}
-#        run: echo "$STEPS_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
 
       - name: Job Results
         run: |
           echo login_ecr
-          test ${{ steps.login_ecr.outputs.outcome }} -eq success
+          test ${{ steps.login_ecr.outputs.exitcode }} -eq 0
           echo build_and_push
-          test ${{ steps.build_and_push.outputs.outcome }} -eq success
+          test ${{ steps.build_and_push.outputs.exitcode }} -eq 0
