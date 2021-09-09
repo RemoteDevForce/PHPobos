@@ -51,15 +51,15 @@ resource "aws_ecs_service" "application" {
   desired_count   = var.service_desired
   iam_role        = aws_iam_role.application.arn
 
-  load_balancer {
+  load_balancer = {
     target_group_arn = aws_alb_target_group.application.arn
     container_name   = "${var.env_name}-${var.app_name}"
     container_port   = 80
   }
 
-  placement_strategy {
-    type  = "spread"
-    field = "instanceId"
+  ordered_placement_strategy = {
+    type  = "binpack"
+    field = "memory"
   }
 
   depends_on = [
