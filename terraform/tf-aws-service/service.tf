@@ -14,7 +14,7 @@ data "template_file" "service_definition" {
 
 resource "aws_ecs_task_definition" "application" {
   family = "${var.env_name}-${var.app_name}"
-  container_definitions = "data.template_file.service_definition.rendered"
+  container_definitions = data.template_file.service_definition.rendered
 }
 
 resource "aws_iam_role" "application" {

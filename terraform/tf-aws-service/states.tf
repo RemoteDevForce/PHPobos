@@ -6,7 +6,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "${var.env_name}-${var.app_name}-${var.region}-tfstate"
-    key    = "ecs-service.tfstate"
+    key    = "ecs-app-service.tfstate"
     region = var.region
   }
 }
@@ -14,7 +14,7 @@ terraform {
 # Import infrastructure state
 data "terraform_remote_state" "infrastructure_state" {
   backend = "s3"
-  config {
+  config = {
     bucket = "${var.env_name}-${var.app_name}-${var.region}-tfstate"
     key = "infrastructure.tfstate"
     region = var.region
