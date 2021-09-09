@@ -15,9 +15,6 @@ jobs:
   build-actions:
     name: Build Docker Image - ECS Service
     runs-on: ubuntu-latest
-    outputs:
-      login_ecr_exitcode: ${{ steps.login_ecr.outputs.exitcode }}
-      build_and_push_exitcode: ${{ steps.build_and_push.outputs.exitcode }}
 
     steps:
       - name: Checkout Repository
