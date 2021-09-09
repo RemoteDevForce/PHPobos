@@ -36,6 +36,11 @@ jobs:
         with:
           terraform_version: 1.0.3
 
+      - name: Get App Name & Target Region
+        run: |
+          echo "APP_NAME=$(cat ./../environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
+          echo "REGION=$(cat ./../environments/${{ env.ENV }}/config.tfvars.json | jq -r '.region')" >> $GITHUB_ENV
+
       - name: Copy ECS Task Release Config from S3
         run: aws s3 cp s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs/last-${{ env.ENV }}-build.tfvars ./
 
