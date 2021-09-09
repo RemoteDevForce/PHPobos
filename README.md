@@ -32,10 +32,11 @@ First make sure you have done the following:
 ## Production Ready
  
 I would recommended reviewing ALL files. A few things I can think of are:
- 
+
+ * Restrict GitHub IAM Keys to just have what is needed (God Made aka `Administrator Access` is not recommended) 
  * Add TF state locking via DynamoDB - [read more](https://www.terraform.io/docs/language/settings/backends/s3.html)
- * Add SSL to ALB
- * Add Encryption to ECR
+ * Add Encryption to ECR, ALB, ECS, etc.
+   * Add SSL to ALB (Best to host domain DNS with Route53 and use AWS Certificate Manager)
  * Add an RDS config in tf-aws-infra
  * Blue/Green Deployment (faster rollback)
  * Inject `.env.local` or environment variable overrides to configure staging/prod app
