@@ -54,8 +54,6 @@ jobs:
           # Keep in sync with terraform/tf-aws-service/ecr.tf ecr->name - also build release file job below
           ECR_REPOSITORY: ${{ env.ENV }}-${{ env.APP_NAME }}-ecr
           IMAGE_TAG: ${{ github.sha }}
-        outputs:
-          exitcode: ${{ steps.build_and_push.outputs.exitcode }}
 
       - name: Build Last Build Release File
         shell: bash
