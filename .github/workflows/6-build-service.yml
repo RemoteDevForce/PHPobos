@@ -43,15 +43,15 @@ jobs:
       - name: Login to Amazon ECR
         id: ecrlogin
         uses: aws-actions/amazon-ecr-login@v1
-#
-#      - name: Build & Push Docker Image to ECR
-#        id: buildpush
-#        run: make build-and-push
-#        env:
-#          ECR_REGISTRY: ${{ steps.ecrlogin.outputs.registry }}
-#          # Keep in sync with terraform/tf-aws-service/ecr.tf ecr->name - also build release file job below
-#          ECR_REPOSITORY: ${{ env.ENV }}-${{ env.APP_NAME }}-ecr
-#          IMAGE_TAG: ${{ github.sha }}
+
+      - name: Build & Push Docker Image to ECR
+        id: buildpush
+        run: make build-and-push
+        env:
+          ECR_REGISTRY: ${{ steps.ecrlogin.outputs.registry }}
+          # Keep in sync with terraform/tf-aws-service/ecr.tf ecr->name - also build release file job below
+          ECR_REPOSITORY: ${{ env.ENV }}-${{ env.APP_NAME }}-ecr
+          IMAGE_TAG: ${{ github.sha }}
 
       - name: Build ECS Task Release Config & Push to S3
         run: |
