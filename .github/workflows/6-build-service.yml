@@ -58,4 +58,4 @@ jobs:
           touch last-${{ env.ENV }}-build.tfvars
           echo 'docker_tag = "${{ github.sha }}"' >> last-${{ env.ENV }}-build.tfvars
           echo 'image_name = "${{ steps.login_ecr.outputs.registry }}/${{ env.ENV }}-${{ env.APP_NAME }}-ecr"' >> last-${{ env.ENV }}-build.tfvars
-          aws s3 cp last-${{ env.ENV }}-build.tfvars s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs --delete
+          aws s3 cp last-${{ env.ENV }}-build.tfvars s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs
