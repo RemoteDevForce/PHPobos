@@ -15,6 +15,9 @@ jobs:
   build-actions:
     name: Build Docker Image - ECS Service
     runs-on: ubuntu-latest
+#    outputs:
+#      login_ecr_exitcode: ${{ steps.login_ecr.outputs.exitcode }}
+#      build_and_push_exitcode: ${{ steps.build_and_push.outputs.exitcode }}
 
     steps:
       - name: Checkout Repository
@@ -42,8 +45,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@v1
-        outputs:
-          exitcode: ${{ steps.login_ecr.outputs.exitcode }}
 
       - name: Build & Push Docker Image to ECR
         id: build_and_push
@@ -75,6 +76,6 @@ jobs:
         shell: bash
         run: |
           echo login_ecr
-          test ${{ steps.login_ecr.outputs.exitcode }} -eq 0
+          test ${{ jobs.login_ecr.outputs.login_ecr_exitcode }} -eq 0
           echo build_and_push
-          test ${{ steps.build_and_push.outputs.exitcode }} -eq 0
+          test ${{ jobs.build_and_push.outputs.build_and_push_exitcode }} -eq 0
