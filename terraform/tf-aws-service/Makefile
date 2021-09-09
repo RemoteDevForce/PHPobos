@@ -8,7 +8,7 @@ remote_tfstate_bucket=${env_name}-${app_name}-${region}-tfstate
 tf-init:
 	terraform init \
     -backend-config="bucket=${remote_tfstate_bucket}" \
-    -backend-config="key=ecs-service.tfstate" \
+    -backend-config="key=ecs-app-service.tfstate" \
     -backend-config="region=${region}"
 
 tf-plan: tf-init
