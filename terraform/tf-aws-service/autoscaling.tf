@@ -38,7 +38,7 @@ resource "aws_cloudwatch_metric_alarm" "application-cpu-scale-up" {
   namespace           = "AWS/ECS"
   period              = "300"
   statistic           = "Average"
-  threshold           = "var.cpu_scale_up"
+  threshold           = var.cpu_scale_up
   alarm_description   = "Monitors ECS CPU Utilization"
   alarm_actions       = [aws_appautoscaling_policy.scale-up.arn]
 
