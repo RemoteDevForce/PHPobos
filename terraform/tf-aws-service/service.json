@@ -8,6 +8,10 @@
     {
       "name": "APP_NAME",
       "value": "${app_name}"
+    },
+    {
+      "name": "APP_ENV",
+      "value": "${env_name}"
     }
   ],
   "portMappings": [{
