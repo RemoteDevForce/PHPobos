@@ -88,7 +88,7 @@ jobs:
 
       - name: Get App Name & Target Region
         run: |
-          echo "APP_NAME=$(cat ./../environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
+          echo "APP_NAME=$(cat ./../environments/common.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
           echo "REGION=$(cat ./../environments/${{ env.ENV }}/config.tfvars.json | jq -r '.region')" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials

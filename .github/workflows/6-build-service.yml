@@ -30,7 +30,7 @@ jobs:
 
       - name: Get App Name & Target Region
         run: |
-          echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
+          echo "APP_NAME=$(cat ./../terraform/environments/common.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
           echo "REGION=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.region')" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
