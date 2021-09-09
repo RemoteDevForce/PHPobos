@@ -39,33 +39,34 @@ jobs:
           aws-region: us-west-2
 
       - name: Login to Amazon ECR
-        id: login_ecr
+        id: ecrlogin
         uses: aws-actions/amazon-ecr-login@v1
         continue-on-error: true
 
       - name: Build & Push Docker Image to ECR
-        id: build_and_push
-        run: make build-and-push
+        id: buildpush
+        run: echo donezo
+        #make build-and-push
         env:
-          ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+          ECR_REGISTRY: ${{ steps.ecrlogin.outputs.registry }}
           # Keep in sync with terraform/tf-aws-service/ecr.tf ecr->name - also build release file job below
           ECR_REPOSITORY: ${{ env.ENV }}-${{ env.APP_NAME }}-ecr
           IMAGE_TAG: ${{ github.sha }}
         continue-on-error: true
 
-      - name: Build Last Build Release File
-        run: |
-          touch last-${{ env.ENV }}-build.tfvars
-          echo 'docker_tag = "${{ github.sha }}"' >> last-${{ env.ENV }}-build.tfvars
-          echo 'image_name = "${{ steps.login_ecr.outputs.registry }}/${{ env.ENV }}-${{ env.APP_NAME }}-ecr"' >> last-${{ env.ENV }}-build.tfvars
-
-      - name: Upload Release Version Tag
-        uses: actions/upload-artifact@v2
-        with:
-          name: last-${{ env.ENV }}-build
-          path: last-${{ env.ENV }}-build.tfvars
-          # 90 days is the max, if you don't release this often then change this to persist the last build somewhere.
-          retention-days: 90
+#      - name: Build Last Build Release File
+#        run: |
+#          touch last-${{ env.ENV }}-build.tfvars
+#          echo 'docker_tag = "${{ github.sha }}"' >> last-${{ env.ENV }}-build.tfvars
+#          echo 'image_name = "${{ steps.login_ecr.outputs.registry }}/${{ env.ENV }}-${{ env.APP_NAME }}-ecr"' >> last-${{ env.ENV }}-build.tfvars
+#
+#      - name: Upload Release Version Tag
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: last-${{ env.ENV }}-build
+#          path: last-${{ env.ENV }}-build.tfvars
+#          # 90 days is the max, if you don't release this often then change this to persist the last build somewhere.
+#          retention-days: 90
 
 # Very helpful to see what is available to you
       - name: Dump steps context
@@ -76,6 +77,6 @@ jobs:
       - name: Job Results
         run: |
           echo login_ecr
-          test ${{ steps.login_ecr.outputs.exitcode }} -eq 0
+          test ${{ steps.ecrlogin.outputs.exitcode }} -eq 0
           echo build_and_push
-          test ${{ steps.build_and_push.outputs.exitcode }} -eq 0
+          test ${{ steps.buildpush.outputs.exitcode }} -eq 0
