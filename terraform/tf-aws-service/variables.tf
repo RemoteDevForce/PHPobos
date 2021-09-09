@@ -12,10 +12,6 @@ variable "reserved_memory" {
 variable "max_memory" {
   default = 128
 }
-variable "internal_alb" {
-  default     = false
-  description = "If the ALB is an internal load balancer or exposed to public"
-}
 // Lock this down to your liking or create your own with terraform
 variable "ecs_iam_role" {
   default = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
