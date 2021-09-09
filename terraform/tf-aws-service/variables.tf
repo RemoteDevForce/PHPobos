@@ -13,7 +13,7 @@ variable "max_memory" {
   default = 128
 }
 variable "internal_alb" {
-  default = false
+  default     = false
   description = "If the ALB is an internal load balancer or exposed to public"
 }
 // Lock this down to your liking or create your own with terraform

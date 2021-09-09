@@ -2,23 +2,23 @@ data "template_file" "service_definition" {
   template = file("${path.module}/service.json")
 
   vars = {
-    env_name = var.env_name
-    region = var.region
-    app_name = var.app_name
-    image_name = var.image_name
-    docker_tag = var.docker_tag
-    max_memory = var.max_memory
+    env_name        = var.env_name
+    region          = var.region
+    app_name        = var.app_name
+    image_name      = var.image_name
+    docker_tag      = var.docker_tag
+    max_memory      = var.max_memory
     reserved_memory = var.reserved_memory
   }
 }
 
 resource "aws_ecs_task_definition" "application" {
-  family = "${var.env_name}-${var.app_name}"
+  family                = "${var.env_name}-${var.app_name}"
   container_definitions = data.template_file.service_definition.rendered
 }
 
 resource "aws_iam_role" "application" {
-  name = "${var.env_name}-${var.app_name}"
+  name               = "${var.env_name}-${var.app_name}"
   assume_role_policy = <<EOF
 {
   "Version": "2008-10-17",
@@ -41,20 +41,20 @@ EOF
 // However, this requires you have an aws managed certificate ARN for a domain you own.
 resource "aws_iam_role_policy_attachment" "ecs_service_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
-  role = aws_iam_role.application.name
+  role       = aws_iam_role.application.name
 }
 
 resource "aws_ecs_service" "application" {
-  name = "${var.env_name}-${var.app_name}"
-  cluster = data.terraform_remote_state.infrastructure_state.cluster_id
+  name            = "${var.env_name}-${var.app_name}"
+  cluster         = data.terraform_remote_state.infrastructure_state.outputs.cluster_id
   task_definition = aws_ecs_task_definition.application.arn
-  desired_count = var.service_desired
-  iam_role = aws_iam_role.application.arn
+  desired_count   = var.service_desired
+  iam_role        = aws_iam_role.application.arn
 
   load_balancer {
     target_group_arn = aws_alb_target_group.application.arn
-    container_name = "${var.env_name}-${var.app_name}"
-    container_port = 80
+    container_name   = "${var.env_name}-${var.app_name}"
+    container_port   = 80
   }
 
   placement_strategy {
