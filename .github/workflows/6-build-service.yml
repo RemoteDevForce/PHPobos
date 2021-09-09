@@ -2,46 +2,46 @@ name: 6 - Docker Build - ECS Service
 
 on:
   workflow_dispatch:
-#  push:
-#    branches:
-#      - develop
-#      - main
+  push:
+    branches:
+      - develop
+      - main
 
 defaults:
   run:
     working-directory: docker
 
 jobs:
-  build_actions:
+  build_docker_image:
     name: Build Docker Image - ECS Service
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - name: develop - Set ENV to staging
-        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
-        run: echo "ENV=staging" >> $GITHUB_ENV
-
-      - name: main - Set ENV to prod
-        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
-        run: echo "ENV=prod" >> $GITHUB_ENV
-
-      - name: Get App Name
-        run: echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-
-      - name: Login to Amazon ECR
-        id: ecrlogin
-        uses: aws-actions/amazon-ecr-login@v1
-        continue-on-error: true
+#
+#      - name: develop - Set ENV to staging
+#        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
+#        run: echo "ENV=staging" >> $GITHUB_ENV
+#
+#      - name: main - Set ENV to prod
+#        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
+#        run: echo "ENV=prod" >> $GITHUB_ENV
+#
+#      - name: Get App Name
+#        run: echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
+#
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: us-west-2
+#
+#      - name: Login to Amazon ECR
+#        id: ecrlogin
+#        uses: aws-actions/amazon-ecr-login@v1
+#        continue-on-error: true
 
       - name: Build & Push Docker Image to ECR
         id: buildpush
