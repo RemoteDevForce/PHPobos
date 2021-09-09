@@ -41,6 +41,11 @@ jobs:
         run: make tf-apply
         continue-on-error: true
 
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+
       - name: Job Results
         run: |
           echo apply
