@@ -19,7 +19,7 @@ resource "aws_alb_target_group" "application" {
   name     = "${var.env_name}-${var.app_name}"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = data.terraform_remote_state.infrastructure_state.outputs.outputs.vpc_id
+  vpc_id   = data.terraform_remote_state.infrastructure_state.outputs.vpc_id
   tags = {
     ManagedBy = "Terraform"
     Name      = "${var.env_name}-${var.app_name}"
