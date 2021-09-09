@@ -17,11 +17,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: develop - Set ENV to staging
-        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
+        if: endsWith(github.ref, '/develop')
         run: echo "ENV=staging" >> $GITHUB_ENV
 
       - name: main - Set ENV to prod
-        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
+        if: endsWith(github.ref, '/main')
         run: echo "ENV=prod" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
@@ -40,11 +40,6 @@ jobs:
         id: apply
         run: make tf-apply
         continue-on-error: true
-
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
 
       - name: Job Results
         run: |

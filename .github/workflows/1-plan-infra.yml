@@ -175,6 +175,12 @@ jobs:
               body: output
             })
 
+       # Very helpful to see what is available to you
+#      - name: Dump steps context
+#        env:
+#          STEPS_CONTEXT: ${{ toJson(steps) }}
+#        run: echo "$STEPS_CONTEXT"
+
       # One day when GitHub Actions Support User Input (Blocking Steps) then we should pump the plan output file into tf apply
       - name: Job Results
         run: |

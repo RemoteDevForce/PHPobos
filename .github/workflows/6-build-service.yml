@@ -2,10 +2,10 @@ name: 6 - Docker Build - ECS Service
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - develop
-      - main
+#  push:
+#    branches:
+#      - develop
+#      - main
 
 defaults:
   run:
