@@ -1,11 +1,11 @@
 
 resource "aws_appautoscaling_target" "application" {
-  service_namespace  = "ecs"
+  max_capacity       = var.service_max
+  min_capacity       = var.service_min
   resource_id        = "service/${data.terraform_remote_state.infrastructure_state.outputs.ecs_cluster_name}/${aws_ecs_service.application.name}"
   scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
   role_arn           = aws_iam_role.ecs_autoscale_role.arn
-  min_capacity       = var.service_min
-  max_capacity       = var.service_max
 
   depends_on = [aws_ecs_service.application]
 }
@@ -16,13 +16,15 @@ resource "aws_appautoscaling_policy" "scale-up" {
   resource_id        = "service/${data.terraform_remote_state.infrastructure_state.outputs.ecs_cluster_name}/${aws_ecs_service.application.name}"
   scalable_dimension = "ecs:service:DesiredCount"
 
-  adjustment_type         = "ChangeInCapacity"
-  cooldown                = 60
-  metric_aggregation_type = "Maximum"
+  step_scaling_policy_configuration {
+    adjustment_type         = "ChangeInCapacity"
+    cooldown                = 60
+    metric_aggregation_type = "Maximum"
 
-  step_adjustment {
-    metric_interval_lower_bound = 0
-    scaling_adjustment          = 1
+    step_adjustment {
+      metric_interval_lower_bound = 0
+      scaling_adjustment          = 1
+    }
   }
 
   depends_on = [aws_appautoscaling_target.application]
@@ -54,13 +56,15 @@ resource "aws_appautoscaling_policy" "scale-down" {
   resource_id        = "service/${data.terraform_remote_state.infrastructure_state.outputs.ecs_cluster_name}/${aws_ecs_service.application.name}"
   scalable_dimension = "ecs:service:DesiredCount"
 
-  adjustment_type         = "ChangeInCapacity"
-  cooldown                = 60
-  metric_aggregation_type = "Maximum"
+  step_scaling_policy_configuration {
+    adjustment_type         = "ChangeInCapacity"
+    cooldown                = 60
+    metric_aggregation_type = "Maximum"
 
-  step_adjustment {
-    metric_interval_lower_bound = 0
-    scaling_adjustment          = -1
+    step_adjustment {
+      metric_interval_lower_bound = 0
+      scaling_adjustment          = -1
+    }
   }
 
   depends_on = [aws_appautoscaling_target.application]

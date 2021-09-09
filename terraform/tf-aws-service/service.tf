@@ -71,8 +71,21 @@ resource "aws_ecs_service" "application" {
 }
 
 resource "aws_iam_role" "ecs_autoscale_role" {
-  name               = "ecsAutoscaleRole"
-  assume_role_policy = file("${path.module}/policies/autoscale-assume-role.json")
+  name               = "${var.env_name}-${var.app_name}-ecs-autoscale-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "application-autoscaling.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
 }
 
 resource "aws_iam_policy_attachment" "ecs_autoscale_role_attach" {
