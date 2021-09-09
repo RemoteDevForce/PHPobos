@@ -1,13 +1,13 @@
 # Check https://hub.docker.com/_/php/ for updates.
-# Note: Installing php extensions is not trival...
 FROM php:8.0-fpm-buster
 
-# PHP8 + Nginx = #StillWinning
+# PHP8 + Nginx
 RUN docker-php-source extract \
     && apt-get update \
-    # System Binaries
+    # System Binaries (Note: SQLITE Not Required if adding a proper RDS instance)
     && apt-get -y --no-install-recommends install \
         nginx \
+        sqlite \
         vim \
         zip \
         make \

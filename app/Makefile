@@ -1,4 +1,4 @@
-# @todo Copy secrets or inject env vars some way for live builds
+#Expand on this for other helpful commands
 
 build-deploy:
 	composer install --optimize-autoloader

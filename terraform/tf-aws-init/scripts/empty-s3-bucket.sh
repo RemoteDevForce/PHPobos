@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# Inputs Required <bucket> <aws_profile> <region>
+# Usage Ex:    ./empty-s3-bucket.sh staging-phpobos-us-west-2-tfstate-logs default us-west-2
 bucket=$1
 profile=$2
 region=$3

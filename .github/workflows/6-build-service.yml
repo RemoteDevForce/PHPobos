@@ -29,7 +29,9 @@ jobs:
         run: echo "ENV=prod" >> $GITHUB_ENV
 
       - name: Get App Name
-        run: echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
+        run: |
+          echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
+          echo "REGION=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.region')" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -57,10 +59,5 @@ jobs:
           echo 'docker_tag = "${{ github.sha }}"' >> last-${{ env.ENV }}-build.tfvars
           echo 'image_name = "${{ steps.login_ecr.outputs.registry }}/${{ env.ENV }}-${{ env.APP_NAME }}-ecr"' >> last-${{ env.ENV }}-build.tfvars
 
-      - name: Upload Release Version Tag
-        uses: actions/upload-artifact@v2
-        with:
-          name: last-${{ env.ENV }}-build
-          path: last-${{ env.ENV }}-build.tfvars
-          # 90 days is the max, if you don't release this often then change this to persist the last build somewhere.
-          retention-days: 90
+      - name: Deploy static site to S3 bucket
+        run: aws s3 sync last-${{ env.ENV }}-build.tfvars s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs --delete

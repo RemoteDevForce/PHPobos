@@ -38,6 +38,7 @@ I would recommended reviewing ALL files. A few things I can think of are:
  * Add Encryption to ECR
  * Add an RDS config in tf-aws-infra
  * Blue/Green Deployment (faster rollback)
+ * Inject `.env.local` or environment variable overrides to configure staging/prod app
  
 ## References
  

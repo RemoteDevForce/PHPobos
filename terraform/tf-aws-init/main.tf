@@ -28,8 +28,8 @@ resource "aws_s3_bucket" "terraform-states" {
 
   # Send all S3 logs to another bucket
   logging {
-    target_bucket = aws_s3_bucket.terraform-logs.id
-    target_prefix = "logs/"
+    target_bucket = aws_s3_bucket.audit-logs.id
+    target_prefix = "tfstates-logs/"
   }
 
   tags = {
@@ -42,12 +42,35 @@ resource "aws_s3_bucket" "terraform-states" {
 }
 
 # This terraform bucket is an audit log of anything that happens to the state bucket
-resource "aws_s3_bucket" "terraform-logs" {
-  bucket = "${var.env_name}-${var.app_name}-${var.region}-tfstate-logs"
+resource "aws_s3_bucket" "audit-logs" {
+  bucket = "${var.env_name}-${var.app_name}-${var.region}-audit-logs"
   acl    = "log-delivery-write"
 
   tags = {
-    Name      = "${var.env_name}-${var.app_name}-${var.region}-tfstate-logs"
+    Name      = "${var.env_name}-${var.app_name}-${var.region}-audit-logs"
+    ManagedBy = "Terraform"
+    Env       = var.env_name
+    App       = var.app_name
+    Region    = var.region
+  }
+}
+
+# Store release build configs and application configs
+resource "aws_s3_bucket" "configs" {
+  bucket = "${var.env_name}-${var.app_name}-${var.region}-configs"
+  acl    = "private"
+
+  versioning {
+    enabled = true
+  }
+
+  logging {
+    target_bucket = aws_s3_bucket.audit-logs.id
+    target_prefix = "config-logs/"
+  }
+
+  tags = {
+    Name      = "${var.env_name}-${var.app_name}-${var.region}-configs"
     ManagedBy = "Terraform"
     Env       = var.env_name
     App       = var.app_name
