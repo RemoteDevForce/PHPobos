@@ -42,6 +42,8 @@ jobs:
       - name: Login to Amazon ECR
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@v1
+        outputs:
+          exitcode: ${{ steps.login_ecr.outputs.exitcode }}
 
       - name: Build & Push Docker Image to ECR
         id: build_and_push
@@ -51,14 +53,8 @@ jobs:
           # Keep in sync with terraform/tf-aws-service/ecr.tf ecr->name - also build release file job below
           ECR_REPOSITORY: ${{ env.ENV }}-${{ env.APP_NAME }}-ecr
           IMAGE_TAG: ${{ github.sha }}
-
-      - name: Job Results
-        shell: bash
-        run: |
-          echo fmt
-          test ${{ steps.login_ecr.outputs.exitcode }} -eq 0
-          echo init
-          test ${{ steps.build_and_push.outputs.exitcode }} -eq 0
+        outputs:
+          exitcode: ${{ steps.build_and_push.outputs.exitcode }}
 
       - name: Build Last Build Release File
         shell: bash
@@ -74,3 +70,11 @@ jobs:
           path: last-${{ env.ENV }}-build.tfvars
           # 90 days is the max, if you don't release this often then change this to persist the last build somewhere.
           retention-days: 90
+
+      - name: Job Results
+        shell: bash
+        run: |
+          echo login_ecr
+          test ${{ steps.login_ecr.outputs.exitcode }} -eq 0
+          echo build_and_push
+          test ${{ steps.build_and_push.outputs.exitcode }} -eq 0
