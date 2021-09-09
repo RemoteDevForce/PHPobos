@@ -28,7 +28,7 @@ jobs:
         if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
         run: echo "ENV=prod" >> $GITHUB_ENV
 
-      - name: Get App Name
+      - name: Get App Name & Target Region
         run: |
           echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
           echo "REGION=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.region')" >> $GITHUB_ENV
