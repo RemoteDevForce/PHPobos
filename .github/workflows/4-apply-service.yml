@@ -17,11 +17,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: develop - Set ENV to staging
-        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
+        if: endsWith(github.ref, '/develop')
         run: echo "ENV=staging" >> $GITHUB_ENV
 
       - name: main - Set ENV to prod
-        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
+        if: endsWith(github.ref, '/main')
         run: echo "ENV=prod" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
@@ -35,6 +35,9 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.0.3
+
+      - name: Copy ECS Task Release Config from S3
+        run: aws s3 cp s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs/last-${{ env.ENV }}-build.tfvars ./
 
       - name: Terraform Apply
         id: apply

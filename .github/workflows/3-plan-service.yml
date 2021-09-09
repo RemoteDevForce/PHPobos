@@ -86,10 +86,8 @@ jobs:
         if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
         run: echo "ENV=prod" >> $GITHUB_ENV
 
-      - name: Download release info
-        uses: actions/download-artifact@v2
-        with:
-          name: last-${{ env.ENV }}-build
+      - name: Copy ECS Task Release Config from S3
+        run: aws s3 cp s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs/last-${{ env.ENV }}-build.tfvars ./
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
