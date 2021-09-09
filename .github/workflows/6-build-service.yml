@@ -19,34 +19,33 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-#
-#      - name: develop - Set ENV to staging
-#        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
-#        run: echo "ENV=staging" >> $GITHUB_ENV
-#
-#      - name: main - Set ENV to prod
-#        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
-#        run: echo "ENV=prod" >> $GITHUB_ENV
-#
-#      - name: Get App Name
-#        run: echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
-#
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: us-west-2
-#
-#      - name: Login to Amazon ECR
-#        id: ecrlogin
-#        uses: aws-actions/amazon-ecr-login@v1
-#        continue-on-error: true
+
+      - name: develop - Set ENV to staging
+        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
+        run: echo "ENV=staging" >> $GITHUB_ENV
+
+      - name: main - Set ENV to prod
+        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
+        run: echo "ENV=prod" >> $GITHUB_ENV
+
+      - name: Get App Name
+        run: echo "APP_NAME=$(cat ./../terraform/environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Login to Amazon ECR
+        id: ecrlogin
+        uses: aws-actions/amazon-ecr-login@v1
+        continue-on-error: true
 
       - name: Build & Push Docker Image to ECR
         id: buildpush
-        run: echo donezo
-        #make build-and-push
+        run: make build-and-push
         env:
           ECR_REGISTRY: ${{ steps.ecrlogin.outputs.registry }}
           # Keep in sync with terraform/tf-aws-service/ecr.tf ecr->name - also build release file job below
@@ -54,27 +53,16 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         continue-on-error: true
 
-#      - name: Build Last Build Release File
-#        run: |
-#          touch last-${{ env.ENV }}-build.tfvars
-#          echo 'docker_tag = "${{ github.sha }}"' >> last-${{ env.ENV }}-build.tfvars
-#          echo 'image_name = "${{ steps.login_ecr.outputs.registry }}/${{ env.ENV }}-${{ env.APP_NAME }}-ecr"' >> last-${{ env.ENV }}-build.tfvars
-#
-#      - name: Upload Release Version Tag
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: last-${{ env.ENV }}-build
-#          path: last-${{ env.ENV }}-build.tfvars
-#          # 90 days is the max, if you don't release this often then change this to persist the last build somewhere.
-#          retention-days: 90
-
-# Very helpful to see what is available to you
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-
-      - name: Job Results
+      - name: Build Last Build Release File
         run: |
-          echo apply
-          test ${{ steps.buildpush.outputs.exitcode }} -eq 0
+          touch last-${{ env.ENV }}-build.tfvars
+          echo 'docker_tag = "${{ github.sha }}"' >> last-${{ env.ENV }}-build.tfvars
+          echo 'image_name = "${{ steps.login_ecr.outputs.registry }}/${{ env.ENV }}-${{ env.APP_NAME }}-ecr"' >> last-${{ env.ENV }}-build.tfvars
+
+      - name: Upload Release Version Tag
+        uses: actions/upload-artifact@v2
+        with:
+          name: last-${{ env.ENV }}-build
+          path: last-${{ env.ENV }}-build.tfvars
+          # 90 days is the max, if you don't release this often then change this to persist the last build somewhere.
+          retention-days: 90
