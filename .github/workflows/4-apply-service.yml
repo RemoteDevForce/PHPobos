@@ -41,8 +41,9 @@ jobs:
           echo "APP_NAME=$(cat ./../environments/${{ env.ENV }}/config.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
           echo "REGION=$(cat ./../environments/${{ env.ENV }}/config.tfvars.json | jq -r '.region')" >> $GITHUB_ENV
 
+      # Metadata fix added otherwise we get a 255 return code https://github.com/actions/checkout/issues/440
       - name: Copy ECS Task Release Config from S3
-        run: aws s3 cp s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs/last-${{ env.ENV }}-build.tfvars ./
+        run: AWS_EC2_METADATA_DISABLED=true aws s3 cp s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs/last-${{ env.ENV }}-build.tfvars ./
 
       - name: Terraform Apply
         id: apply
