@@ -6,6 +6,7 @@ RUN docker-php-source extract \
     && apt-get update \
     # System Binaries (Note: SQLITE Not Required if adding a proper RDS instance)
     && apt-get -y --no-install-recommends install \
+        supervisor \
         nginx \
         sqlite \
         vim \
