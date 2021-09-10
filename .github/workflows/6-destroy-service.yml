@@ -1,16 +1,16 @@
 # You should probably do more to protect this from running. Maybe comment out or delete/move this.
-name: 7 - Terraform Destroy - Infrastructure
+name: 6 - Terraform Destroy - Service
 
 on:
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: terraform/tf-aws-infra
+    working-directory: terraform/tf-aws-service
 
 jobs:
   tf_destroy:
-    name: TF Destroy Infrastructure
+    name: TF Destroy Service
     runs-on: ubuntu-latest
 
     steps:

@@ -1,4 +1,4 @@
-name: 3 - Terraform Plan - Service
+name: 4 - Terraform Plan - Service
 
 on:
   workflow_dispatch:

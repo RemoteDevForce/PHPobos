@@ -1,4 +1,4 @@
-name: 4 - Terraform Apply - Service
+name: 5 - Terraform Apply - Service
 
 on:
   workflow_dispatch:

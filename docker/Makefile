@@ -37,3 +37,6 @@ logs:
 
 up:
 	docker-compose up -d --force-recreate --build
+
+ssh:
+	docker-compose exec app /bin/bash

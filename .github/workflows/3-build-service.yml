@@ -1,4 +1,4 @@
-name: 6 - Docker Build - ECS Service
+name: 3 - Docker Build & Push to ECR
 
 on:
   workflow_dispatch:

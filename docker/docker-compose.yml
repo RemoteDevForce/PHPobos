@@ -1,10 +1,10 @@
 version: '3.2'
 services:
-  portal_app:
+  app:
     build:
       context: .
     volumes:
-     - ../app:/var/www
+     - ../app:/var/www/app
     ports:
      - "80:80"
      - "443:443"
