@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PHPobos Portal Application{% endblock %}
+
+{% block body %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .portal-font {font-family: 'Press Start 2P', cursive;}
+    .big-font { font-size: 2em;}
+    .small-font { font-size: .75em;}
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
+</style>
+
+<div class="example-wrapper">
+    <p class="portal-font big-font">PHPobos Portal System</p>
+    <p class="portal-font small-font">STATUS: ONLINE ✅</p>
+
+    <p class="portal-font small-font">Please contact administrators before starting the system. Push the red button to engage PHPobos multi-dimensional portal.
+    </p>
+</div>
+    <a href="/on">
+        <img class="center" src="images/big-red-button.jpg" />
+    </a>
+{% endblock %}
