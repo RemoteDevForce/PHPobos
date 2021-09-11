@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PHPobos Portal Application{% endblock %}
+
+{% block body %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("images/giphy.gif");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: #000;
+            vertical-align: top;
+        }
+
+        .example-wrapper {
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+            font: 18px/1.5 sans-serif;
+        }
+
+        .portal-font {
+            text-align: center;
+            font-family: 'Press Start 2P', cursive;
+            color: white;
+        }
+
+        .big-font {
+            font-size: 2em;
+        }
+
+        .small-font {
+            font-size: .75em;
+        }
+
+        .red {
+            color: red;
+        }
+        .black {
+            color: black;
+        }
+
+        .center {
+            text-align: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+
+        @keyframes flickerAnimation {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-o-keyframes flickerAnimation {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-moz-keyframes flickerAnimation {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes flickerAnimation {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .animate-flicker {
+            -webkit-animation: flickerAnimation 1s infinite;
+            -moz-animation: flickerAnimation 1s infinite;
+            -o-animation: flickerAnimation 1s infinite;
+            animation: flickerAnimation 1s infinite;
+        }
+
+        .element_transparent {
+            opacity: 0;
+        }
+
+        .element_faded {
+            transition: opacity 3s;
+            opacity: 100%; /* or whatever values you want */
+        }
+
+        #Progress_Status {
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+            background-color: #ddd;
+        }
+
+        #myprogressBar {
+            width: 1%;
+            height: 35px;
+            background-color: #005003;
+            text-align: center;
+            line-height: 32px;
+            color: black;
+        }
+        .black-bg {
+            padding: 20px;
+            background: rgba(0,0,0,0.4);
+        }
+    </style>
+    <script>
+        setTimeout(function () {
+            document.getElementById('sound1').play();
+            update();
+        }, 1000); // 10000ms = 10s
+        setTimeout(function () {
+            document.getElementById('WARNING').className = 'element_faded animate-flicker red portal-font big-font center';
+            document.getElementById('warning-container').className = 'black-bg';
+            document.getElementById('Status').textContent = 'STATUS: UNSTABLE ⛔';
+            document.getElementById('title').textContent = 'SYSTEM FAILURE';
+            document.getElementById('title').className = 'portal-font big-font black';
+            document.getElementById('Status').className = 'center portal-font small-font black';
+            document.body.style.backgroundImage = "url('images/fire.gif')";
+            document.getElementById('Progress_Status').className = 'element_transparent';
+
+        }, 16000); // 10000ms = 10s
+
+        setTimeout(function () {
+            document.getElementById('INFO').className = 'element_faded animate-flicker red portal-font big-font center';
+        }, 25000); // 10000ms = 10s
+
+        function update() {
+            var element = document.getElementById("myprogressBar");
+            var width = 1;
+            var identity = setInterval(scene, 150);
+
+            function scene() {
+                if (width >= 100) {
+                    clearInterval(identity);
+                } else {
+                    width++;
+                    element.style.width = width + '%';
+                }
+            }
+        }
+    </script>
+    <br/><div id="warning-container">
+    <div id="WARNING" class="element_transparent">WARNING! <br/>BREACH DETECTED!</div>
+</div>
+    <div id="Progress_Status">
+        <div id="myprogressBar"></div>
+    </div>
+    <div class="example-wrapper">
+
+        <p id="title" class="portal-font big-font">PHPobos Portal Now Running</p>
+        <p id="Status" class="center portal-font small-font">STATUS: ONLINE ✅️</p>
+
+        <p id="INFO" class="element_transparent">
+            Destroy portal system immediately to begin emergency containment procedure.
+        </p>
+        <img id="comms" class="center" width="420px" src="images/commswave.gif"/>
+        <audio id="sound1" src="sounds/portal.mp3" preload="auto"></audio>
+
+    </div>
+{% endblock %}
