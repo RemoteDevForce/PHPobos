@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         body {
-            background-image: url("images/giphy.gif");
+            background-image: url("images/engagedportal.gif");
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -155,7 +155,17 @@
 
         setTimeout(function () {
             document.getElementById('INFO').className = 'element_faded animate-flicker red portal-font big-font center';
-        }, 25000); // 10000ms = 10s
+        }, 27000); // 10000ms = 10s
+
+        setTimeout(function () {
+            document.getElementById('WARNING').className = 'element_transparent';
+            document.getElementById('warning-container').className = 'element_transparent';
+            document.getElementById('Status').classNames = 'element_transparent';
+            document.getElementById('title').className = 'element_transparent';
+            document.getElementById('comms').className = 'element_transparent';
+            document.body.style.backgroundImage = "url('images/static.gif')";
+
+        }, 40000); // 10000ms = 10s
 
         function update() {
             var element = document.getElementById("myprogressBar");
@@ -180,7 +190,7 @@
     </div>
     <div class="example-wrapper">
 
-        <p id="title" class="portal-font big-font">PHPobos Portal Now Running</p>
+        <p id="title" class="portal-font big-font">PHPobos Portal Engaged</p>
         <p id="Status" class="center portal-font small-font">STATUS: ONLINE ✅️</p>
 
         <p id="INFO" class="element_transparent">
