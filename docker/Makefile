@@ -1,4 +1,4 @@
-ENV?=demo
+ENV?=staging
 IMAGE_TAG?=latest
 
 chk-registry:

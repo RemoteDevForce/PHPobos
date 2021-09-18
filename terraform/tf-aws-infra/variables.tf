@@ -34,20 +34,21 @@ variable "public_subnets" {
   default = "10.0.1.0/24,10.0.2.0/24,10.0.3.0/24"
 }
 
+// Update these AMI IDs - http://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_container_instance.html
 variable "amazon_amis" {
   description = "Amazon Linux AMI for bastion instances"
   type        = map(string)
   default = {
-    us-west-2 = "ami-083ac7c7ecf9bb9b0"
+    us-west-2 = "ami-0c2d06d50ce30b442"
   }
 }
 
-// Update these AMI IDs - http://docs.aws.amazon.com/AmazonECS/latest/developerguide/launch_container_instance.html
+// Update these AMI IDs - https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html
 variable "amazon_ecs_amis" {
   description = "Amazon Linux AMI for ECS servers"
   type        = map(string)
   default = {
-    "us-west-2" = "ami-0d034e17dea566f28"
+    "us-west-2" = "ami-09f253e2f2e610302"
   }
 }
 

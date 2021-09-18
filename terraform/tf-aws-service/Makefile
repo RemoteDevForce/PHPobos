@@ -14,6 +14,7 @@ tf-plan: tf-init
 	terraform plan \
 	-var-file="./../environments/common.tfvars.json" \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
+	-var-file="./../environments/$(ENV)/service.tfvars" \
 	-var-file="./last-$(ENV)-build.tfvars" \
 	-var="env_name=$(ENV)"
 
@@ -21,6 +22,7 @@ tf-apply: tf-init
 	terraform apply -auto-approve \
 	-var-file="./../environments/common.tfvars.json" \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
+	-var-file="./../environments/$(ENV)/service.tfvars" \
 	-var-file="./last-$(ENV)-build.tfvars" \
 	-var="env_name=$(ENV)"
 
@@ -28,5 +30,6 @@ tf-destroy: tf-init
 	terraform destroy -auto-approve \
 	-var-file="./../environments/common.tfvars.json" \
 	-var-file="./../environments/$(ENV)/config.tfvars.json" \
+	-var-file="./../environments/$(ENV)/service.tfvars" \
 	-var-file="./last-$(ENV)-build.tfvars" \
 	-var="env_name=$(ENV)"
