@@ -3,3 +3,4 @@
 build-deploy:
 	composer install --optimize-autoloader
 	bin/console cache:warmup
+
