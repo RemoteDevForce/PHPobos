@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   workflow_run:
     workflows: ["1 - Terraform Plan - Infrastructure"]
-    branches:
-      - develop
-      - main
     types:
       - completed
 
@@ -132,7 +129,7 @@ jobs:
         with:
           terraform_version: 1.0.3
 
-      # Very helpful to see what is available to you
+      #
       - name: Dump steps context
         env:
           STEPS_CONTEXT: ${{ github.event_name }}
