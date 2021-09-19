@@ -2,7 +2,10 @@
 
 ![Project PHPobos Logo](https://www.remotedevforce.com/wp-content/uploads/2021/09/project-phpobos.png)
 
-A tutorial for building a `staging` and `prod` AWS ECS Stack with Terraform, GitHub, and CI/CD Actions to host, build, and deploy a PHP application.
+A tutorial for building a `staging` and `prod` AWS ECS Stack with Terraform, GitHub, and CI/CD Actions to host, build, and deploy a PHP application based on the gitflow branching development process.
+
+`develop` branch = `staging` env
+`main` branch = `prod` env
 
 This is a mono-repo and directories are as follows:
 
@@ -10,9 +13,9 @@ This is a mono-repo and directories are as follows:
 * `app` - A highly-experimental Symfony application that creates a portal to another world.
 * `docker` - The dockerfile for local & prod containers for our 4th dimension portal app.
 * `terraform` - All the terraform code for our AWS ECS Stack.
-  * `terraform/tf-aws-init` - Start here to create ssh keys & buckets for our state files
-  * `terraform/tf-aws-infra` - Base infrastructure for AWS such as bastion and ECS servers.
-  * `terraform/tf-aws-service` - The ECS Service for hosting our application.
+  * `tf-aws-init` - Start here to create ssh keys & buckets for our state/config files.
+  * `tf-aws-infra` - Base infrastructure for AWS such as bastion and ECS servers.
+  * `tf-aws-service` - The ECS Service for hosting our application.
 
 ## Prerequisites
 
@@ -34,15 +37,34 @@ Goto the repository page and click "Use this template" to copy it to your own na
 Clone down your version of the repo to your machine.
 
 ### AWS Init Terraform
-Now setup the base S3 buckets/root ssh key which is used to access the bastion instance.
+
+On your local machine with aws-cli setup with IAM credentials, do the following:
  1. `cd` into the `terraform/tf-aws-init` and run `make tf-plan-staging`
  1. If things look good, run `make tf-apply-staging` to create the backend tf state s3 buckets.
 
 ### AWS Infra Terraform
 
+1. Goto `Repo->Settings->Secrets`
+1. Create two secrets in your repo and paste in your IAM credentials `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+1. Goto `Repo->Actions->1 - Terraform Plan - Infrastructure`
+1. Run it by clicking `Run workflow` on `develop` for `staging` or `main` for `prod`
+1. Check Job Results or `Terraform Plan` in the action to verify & run it by clicking `Run workflow`
+1. Check Job Results or `Terraform Apply` in the action to verify it created everything and no errors occurred.
+
 ### Docker Build Action
 
+This auto-runs when `develop` or `main` has new changes pushed.
+This will build the `./docker/Dockerfile` with `./app` copied into the container.
+It finally pushes to `ECR` container repository in AWS created by the AWS Infra Apply Job.
+ 
 ### AWS Service Terraform
+
+1. Goto `Repo->Actions->4 - Terraform Plan - Service`
+1. Run it by clicking `Run workflow` on `develop` for `staging` or `main` for `prod`
+1. Check Job Results or `Terraform Plan` in the action to verify it looks good.
+1. Goto `Repo->Actions->5 - Deploy - Terraform Apply - Service` & run it by clicking `Run workflow`
+1. Check `Terraform Apply` in the action to copy the `alb_dns`
+1. Paste the ALB url your browser to verify your app is working.
 
 ### SSH to the ECS Agent Instance
 
@@ -70,7 +92,6 @@ Update the `.github/CODEOWNERS` file with your username/team. This file restrict
 
 I would recommended reviewing ALL files. A few things I can think of are:
 
- * Add RDS or some database layer
  * Restrict GitHub IAM Keys to just have what is needed (God Made aka `Administrator Access` is not recommended) 
  * Add TF state locking via DynamoDB - [read more](https://www.terraform.io/docs/language/settings/backends/s3.html)
  * Add Encryption to ECR, ALB, ECS, etc.
