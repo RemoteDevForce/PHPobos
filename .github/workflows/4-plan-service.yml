@@ -2,11 +2,9 @@ name: 4 - Terraform Plan - Service
 
 on:
   workflow_dispatch:
+  # Run this Service plan after the Infra plan
   workflow_run:
     workflows: ["1 - Terraform Plan - Infrastructure"]
-    branches:
-      - develop
-      - main
     types:
       - completed
 
@@ -15,28 +13,20 @@ defaults:
     working-directory: terraform/tf-aws-service
 
 jobs:
-  tf_validation:
-    name: TF Validation
+  tf_service_plan:
+    name: TF Service Plan
     runs-on: ubuntu-latest
-    outputs:
-      fmt_stdout: ${{ steps.fmt.outputs.stdout }}
-      fmt_exitcode: ${{ steps.fmt.outputs.exitcode }}
-      init_stdout: ${{ steps.init.outputs.stdout }}
-      init_exitcode: ${{ steps.init.outputs.exitcode }}
-      validate_stdout: ${{ steps.validate.outputs.stdout }}
-      validate_exitcode: ${{ steps.validate.outputs.exitcode }}
 
     steps:
-      # Checkout the code first, otherwise you get "Error: No such file or directory"
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: develop - Set ENV to staging
-        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
+        if: endsWith(github.ref, '/develop')
         run: echo "ENV=staging" >> $GITHUB_ENV
 
       - name: main - Set ENV to prod
-        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
+        if: endsWith(github.ref, '/main')
         run: echo "ENV=prod" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
@@ -66,37 +56,10 @@ jobs:
         run: terraform validate -no-color
         continue-on-error: true
 
-  tf_plan:
-    name: TF Plan
-    runs-on: ubuntu-latest
-    needs: tf_validation
-    outputs:
-      plan_stdout: ${{ steps.plan.outputs.stdout }}
-      plan_exitcode: ${{ steps.plan.outputs.exitcode }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: develop - Set ENV to staging
-        if: endsWith(github.event.pull_request.base.ref, '/develop') || endsWith(github.ref, '/develop')
-        run: echo "ENV=staging" >> $GITHUB_ENV
-
-      - name: main - Set ENV to prod
-        if: endsWith(github.event.pull_request.base.ref, '/main') || endsWith(github.ref, '/main')
-        run: echo "ENV=prod" >> $GITHUB_ENV
-
       - name: Get App Name & Target Region
         run: |
           echo "APP_NAME=$(cat ./../environments/common.tfvars.json | jq -r '.app_name')" >> $GITHUB_ENV
           echo "REGION=$(cat ./../environments/${{ env.ENV }}/config.tfvars.json | jq -r '.region')" >> $GITHUB_ENV
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
 
       - name: Copy ECS Task Release Config from S3
         run: aws s3 cp s3://${{ env.ENV }}-${{ env.APP_NAME }}-${{ env.REGION }}-configs/last-${{ env.ENV }}-build.tfvars ./
@@ -111,107 +74,13 @@ jobs:
         run: make tf-plan
         continue-on-error: true
 
-  status_output:
-    name: Status Output
-    runs-on: ubuntu-latest
-    needs: [tf_validation,tf_plan]
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.0.3
-
-      # Very helpful to see what is available to you
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ github.event_name }}
-        run: echo "$STEPS_CONTEXT"
-
-      - name: Comment on PR
-        uses: actions/github-script@0.9.0
-        if: github.event_name == 'pull_request'
-        env:
-          format_out: ${{ needs.tf_validation.outputs.fmt_stdout }}
-          format_err: ${{ needs.tf_validation.outputs.fmt_stderr }}
-          init_out: ${{ needs.tf_validation.outputs.init_stdout }}
-          init_err: ${{ needs.tf_validation.outputs.init_stderr }}
-          validate_out: ${{ needs.tf_validation.outputs.init_stdout }}
-          validate_err: ${{ needs.tf_validation.outputs.init_stderr }}
-          plan: ${{ needs.tf_plan.outputs.plan_stdout }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const CODE_BLOCK = '```';
-            const fmt_result = '${{ steps.fmt.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const init_result = '${{ steps.init.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const validate_result = '${{ steps.validate.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const plan_result = '${{ steps.plan.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const output = `
-            ### ${ fmt_result } Terraform Format and Style 🎨
-            <details><summary>Logs</summary>
-            Output
-            ${ CODE_BLOCK }diff
-            ${ process.env.format_out }
-            ${ CODE_BLOCK }
-            Errors
-            ${ CODE_BLOCK }
-            ${ process.env.format_err }
-            ${ CODE_BLOCK }
-            </details> <!-- End Format Logs -->
-            ### ${ init_result } Terraform Initialization ⚙️
-            <details><summary>Logs</summary>
-            Output
-            ${ CODE_BLOCK }
-            ${ process.env.init_out }
-            ${ CODE_BLOCK }
-            Errors
-            ${ CODE_BLOCK }
-            ${ process.env.init_err }
-            ${ CODE_BLOCK }
-            </details> <!-- End Init Logs -->
-            ### ${ validate_result } Terraform Validation 🤖
-            <details><summary>Logs</summary>
-            Output
-            ${ CODE_BLOCK }
-            ${ process.env.validate_out }
-            ${ CODE_BLOCK }
-            Errors
-            ${ CODE_BLOCK }
-            ${ process.env.validate_err }
-            ${ CODE_BLOCK }
-            </details> <!-- End Validate Logs -->
-            ### ${ plan_result } Terraform Plan 📖
-            <details><summary>Logs</summary>
-            ${ CODE_BLOCK }terraform
-            ${ process.env.plan }
-            ${ CODE_BLOCK }
-            </details>
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ github.workspace }}\`, Workflow: \`${{ github.workflow }}\`*`;
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-
       - name: Job Results
         run: |
           echo fmt
-          test ${{ needs.tf_validation.outputs.fmt_exitcode }} -eq 0
+          test ${{ steps.fmt.outputs.exitcode }} -eq 0
           echo init
-          test ${{ needs.tf_validation.outputs.init_exitcode }} -eq 0
+          test ${{ steps.init.outputs.exitcode }} -eq 0
           echo validate
-          test ${{ needs.tf_validation.outputs.validate_exitcode }} -eq 0
+          test ${{ steps.validate.outputs.exitcode }} -eq 0
           echo plan
-          test ${{ needs.tf_plan.outputs.plan_exitcode }} -eq 0
+          test ${{ steps.plan.outputs.exitcode }} -eq 0
