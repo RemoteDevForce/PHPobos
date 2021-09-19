@@ -130,6 +130,7 @@ jobs:
           terraform_version: 1.0.3
 
       #
+
       - name: Dump steps context
         env:
           STEPS_CONTEXT: ${{ github.event_name }}
