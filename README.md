@@ -2,13 +2,13 @@
 
 ![Project PHPobos Logo](https://www.remotedevforce.com/wp-content/uploads/2021/09/project-phpobos.png)
 
-A tutorial for building an AWS ECS stack with Terraform, GitHub, and CI/CD Actions to host/build/deploy a PHP application.
+A tutorial for building a `staging` and `prod` AWS ECS Stack with Terraform, GitHub, and CI/CD Actions to host, build, and deploy a PHP application.
 
 This is a mono-repo and directories are as follows:
 
-* `.github/workflows` - All the GitHub Action code. Plan/Apply/Destroy Jobs for Infra/ECS Service. Build docker image.
-* `app` - An experimental Symfony application to create a portal on our remote lab on Phobos.
-* `docker` - The dockerfile for local & prod containers for our highly experimental 4th dimension portal opener app.
+* `.github/workflows` - All the GitHub Action code. Plan/Apply/Build/Destroy Jobs for Infra/ECS/ECR.
+* `app` - A highly-experimental Symfony application that creates a portal to another world.
+* `docker` - The dockerfile for local & prod containers for our 4th dimension portal app.
 * `terraform` - All the terraform code for our AWS ECS Stack.
   * `terraform/tf-aws-init` - Start here to create ssh keys & buckets for our state files
   * `terraform/tf-aws-infra` - Base infrastructure for AWS such as bastion and ECS servers.
