@@ -84,10 +84,6 @@ SSH to bastion `ssh ec2-user@bastion.ip.address.here` and then once on the serve
 
 Then you can run `docker ps` once on an ECS Host to make sure you see the ecs-agent running.
 
-## Notes
-
-Update the `.github/CODEOWNERS` file with your username/team. This file restricts who can change `.github/workflows`.
-
 ## Getting Production Ready
 
 I would recommended reviewing ALL files. A few things I can think of are:
@@ -103,9 +99,14 @@ I would recommended reviewing ALL files. A few things I can think of are:
 ## More Info
 
 [Terraform AWS Init Readme](terraform/tf-aws-init/README.md)
+
 [Terraform AWS Infrastructure Readme](terraform/tf-aws-infra/README.md)
+
 [Terraform AWS ECS Service Readme](terraform/tf-aws-service/README.md)
+
 [Docker Readme](docker/README.md)
+
+Update the `.github/CODEOWNERS` file with your username/team. This file restricts who can change `.github/workflows`.
 
 ## References
 
