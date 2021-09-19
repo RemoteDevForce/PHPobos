@@ -2,6 +2,15 @@ name: 5 - Deploy - Terraform Apply - Service
 
 on:
   workflow_dispatch:
+# Uncomment this to auto run when there is new code pushed
+#  push:
+#    branches:
+#      - develop
+#      - main
+# Uncomment this to auto run when there is a new tag created - @todo fix ENV set
+#  create:
+#    tags:
+#      - v*
 
 defaults:
   run:
