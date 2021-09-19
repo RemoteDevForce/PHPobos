@@ -129,7 +129,7 @@ jobs:
             ### ${ fmt_result } Terraform Format and Style 🎨
             <details><summary>Logs</summary>
             Output
-            ${ CODE_BLOCK }diff
+            ${ CODE_BLOCK }
             ${ process.env.format_out }
             ${ CODE_BLOCK }
             Errors

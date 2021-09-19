@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   workflow_run:
     workflows: ["1 - Terraform Plan - Infrastructure"]
-    branches:
-      - develop
-      - main
     types:
       - completed
 
