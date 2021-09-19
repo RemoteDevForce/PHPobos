@@ -1,5 +1,7 @@
 # Project PHPobos
 
+![Project PHPobos Logo](https://www.remotedevforce.com/wp-content/uploads/2021/09/project-phpobos.png)
+
 A tutorial for building an AWS ECS stack with Terraform, GitHub, and CI/CD Actions to host/build/deploy a PHP application.
 
 This is a mono-repo and directories are as follows:
@@ -68,6 +70,7 @@ Update the `.github/CODEOWNERS` file with your username/team. This file restrict
 
 I would recommended reviewing ALL files. A few things I can think of are:
 
+ * Add RDS or some database layer
  * Restrict GitHub IAM Keys to just have what is needed (God Made aka `Administrator Access` is not recommended) 
  * Add TF state locking via DynamoDB - [read more](https://www.terraform.io/docs/language/settings/backends/s3.html)
  * Add Encryption to ECR, ALB, ECS, etc.
@@ -76,9 +79,16 @@ I would recommended reviewing ALL files. A few things I can think of are:
  * Blue/Green Deployment (faster rollback)
  * Inject `.env.local` or environment variable overrides to configure staging/prod app
 
+## More Info
+
+[Terraform AWS Init Readme](terraform/tf-aws-init/README.md)
+[Terraform AWS Infrastructure Readme](terraform/tf-aws-infra/README.md)
+[Terraform AWS ECS Service Readme](terraform/tf-aws-service/README.md)
+[Docker Readme](docker/README.md)
+
 ## References
 
-Review the slides here
+Review the slides [here](https://docs.google.com/presentation/d/1jCc5mVfBomk9e_JRizkk570Fu_sqngFXb-TeQy1Ladw/edit?usp=sharing)
 
 Checkout my blog post here
 

@@ -66,7 +66,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: tf_validation
     outputs:
-      plan_stdout: ${{ steps.plan.outputs.stdout }}
       plan_exitcode: ${{ steps.plan.outputs.exitcode }}
 
     # Common mistake on new a new job is not checking the code out again
@@ -118,15 +117,14 @@ jobs:
           init_err: ${{ needs.tf_validation.outputs.init_stderr }}
           validate_out: ${{ needs.tf_validation.outputs.init_stdout }}
           validate_err: ${{ needs.tf_validation.outputs.init_stderr }}
-          plan: ${{ needs.tf_plan.outputs.plan_stdout }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const CODE_BLOCK = '```';
-            const fmt_result = '${{ steps.fmt.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const init_result = '${{ steps.init.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const validate_result = '${{ steps.validate.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
-            const plan_result = '${{ steps.plan.outcome }}' === 'failure' ? ':x:' : ':heavy_check_mark:';
+            const fmt_result = '${{ steps.fmt.outcome }}' === 'failure' ? ':x:' : ':white_check_mark:';
+            const init_result = '${{ steps.init.outcome }}' === 'failure' ? ':x:' : ':white_check_mark:';
+            const validate_result = '${{ steps.validate.outcome }}' === 'failure' ? ':x:' : ':white_check_mark:';
+            const plan_result = '${{ steps.plan.outcome }}' === 'failure' ? ':x:' : ':white_check_mark:';
             const output = `
             ### ${ fmt_result } Terraform Format and Style 🎨
             <details><summary>Logs</summary>
