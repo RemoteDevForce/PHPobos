@@ -17,9 +17,9 @@ resource "aws_launch_configuration" "ecs-lc" {
   security_groups = [
     aws_security_group.ecs.id
   ]
-  iam_instance_profile        = aws_iam_role.ecs_iam_role.name
-  associate_public_ip_address = false
-  user_data                   = data.template_file.userdata.rendered
+  iam_instance_profile             = aws_iam_role.ecs_iam_role.name
+  associate_public_ip_address      = false
+  user_data                        = data.template_file.userdata.rendered
   vpc_classic_link_security_groups = []
 
   lifecycle {
