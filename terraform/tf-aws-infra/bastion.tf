@@ -11,6 +11,16 @@ resource "aws_instance" "bastion" {
   source_dest_check           = false
   iam_instance_profile        = aws_iam_instance_profile.bastion_profile.name
 
+  # sync these
+  lifecycle {
+    ignore_changes = [
+      "ebs_block_device",
+      "ephemeral_block_device",
+      "network_interface",
+      "root_block_device"
+    ]
+  }
+
   tags = {
     Name        = "${var.env_name}-${var.app_name}-bastion"
     ManagedBy   = "Terraform"
