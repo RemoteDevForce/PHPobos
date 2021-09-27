@@ -13,12 +13,20 @@ resource "aws_instance" "bastion" {
 
   hibernation = false
 
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
   lifecycle {
     ignore_changes = [
       ebs_block_device,
       ephemeral_block_device,
       network_interface,
-      root_block_device
+      root_block_device,
+      metadata_options,
+      enclave_options,
+      user_data,
+      user_data_base64,
     ]
   }
 
