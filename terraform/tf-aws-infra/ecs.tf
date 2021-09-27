@@ -20,10 +20,18 @@ resource "aws_launch_configuration" "ecs-lc" {
   iam_instance_profile        = aws_iam_role.ecs_iam_role.name
   associate_public_ip_address = false
   user_data                   = data.template_file.userdata.rendered
+  vpc_classic_link_security_groups = []
 
   lifecycle {
     create_before_destroy = true
+
+    ignore_changes = [
+      ebs_block_device,
+      metadata_options,
+      root_block_device
+    ]
   }
+
   depends_on = [
     aws_ecs_cluster.ecs
   ]

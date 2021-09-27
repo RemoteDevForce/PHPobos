@@ -11,13 +11,14 @@ resource "aws_instance" "bastion" {
   source_dest_check           = false
   iam_instance_profile        = aws_iam_instance_profile.bastion_profile.name
 
-  # sync these
+  hibernation = false
+
   lifecycle {
     ignore_changes = [
-      "ebs_block_device",
-      "ephemeral_block_device",
-      "network_interface",
-      "root_block_device"
+      ebs_block_device,
+      ephemeral_block_device,
+      network_interface,
+      root_block_device
     ]
   }
 
