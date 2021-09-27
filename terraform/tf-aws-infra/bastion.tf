@@ -17,6 +17,7 @@ resource "aws_instance" "bastion" {
     cpu_credits = "standard"
   }
 
+  // @todo figure out why plan keeps getting tripped up on something changing
   lifecycle {
     ignore_changes = [
       ebs_block_device,
