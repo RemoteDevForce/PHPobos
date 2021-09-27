@@ -15,10 +15,18 @@ data "template_file" "service_definition" {
 resource "aws_ecs_task_definition" "application" {
   family                = "${var.env_name}-${var.app_name}"
   container_definitions = data.template_file.service_definition.rendered
+  requires_compatibilities = []
+  tags = {
+    Name        = "${var.env_name}-${var.app_name}-ecs-app-assume"
+    ManagedBy   = "Terraform"
+    Environment = var.env_name
+    App         = var.app_name
+    Region      = var.region
+  }
 }
 
 resource "aws_iam_role" "application" {
-  name               = "${var.env_name}-${var.app_name}"
+  name               = "${var.env_name}-${var.app_name}-ecs-app-assume"
   assume_role_policy = <<EOF
 {
   "Version": "2008-10-17",
@@ -35,6 +43,14 @@ resource "aws_iam_role" "application" {
   ]
 }
 EOF
+
+  tags = {
+    Name        = "${var.env_name}-${var.app_name}-ecs-app-assume"
+    ManagedBy   = "Terraform"
+    Environment = var.env_name
+    App         = var.app_name
+    Region      = var.region
+  }
 }
 
 // Check this out if you want HTTPS - https://www.terraform.io/docs/providers/aws/r/alb_listener.html
@@ -86,6 +102,14 @@ resource "aws_iam_role" "ecs_autoscale_role" {
   ]
 }
 EOF
+
+  tags = {
+    Name        = "${var.env_name}-${var.app_name}-ecs-autoscale-role"
+    ManagedBy   = "Terraform"
+    Environment = var.env_name
+    App         = var.app_name
+    Region      = var.region
+  }
 }
 
 resource "aws_iam_policy_attachment" "ecs_autoscale_role_attach" {
