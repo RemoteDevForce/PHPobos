@@ -122,7 +122,8 @@ jobs:
             ### ${ validate_result } Terraform Validation 🤖
             ### ${ plan_result } Terraform Plan 📖
             *Note:* Check Service Plan in Actions Tag After Infra Plan is Complete
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ github.workspace }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ github.workspace }}\`, Workflow: \`${{ github.workflow }}\`*
+            `;
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
