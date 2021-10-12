@@ -112,7 +112,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const CODE_BLOCK = '```';
-            const fmt_result = '${{ needs.tf_validation.outputs.init_exitcode }}' === 0 ? ':x:' : ':white_check_mark:';
+            const fmt_result = '${{ needs.tf_validation.outputs.fmt_exitcode }}' === 0 ? ':x:' : ':white_check_mark:';
             const init_result = '${{ needs.tf_validation.outputs.init_exitcode }}' === '0' ? ':x:' : ':white_check_mark:';
             const validate_result = '${{ needs.tf_validation.outputs.validate_exitcode }}' === '0' ? ':x:' : ':white_check_mark:';
             const plan_result = '${{ needs.tf_plan.outputs.plan_exitcode }}' === '0' ? ':x:' : ':white_check_mark:';
