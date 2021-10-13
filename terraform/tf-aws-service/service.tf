@@ -13,8 +13,8 @@ data "template_file" "service_definition" {
 }
 
 resource "aws_ecs_task_definition" "application" {
-  family                = "${var.env_name}-${var.app_name}"
-  container_definitions = data.template_file.service_definition.rendered
+  family                   = "${var.env_name}-${var.app_name}"
+  container_definitions    = data.template_file.service_definition.rendered
   requires_compatibilities = []
   tags = {
     Name        = "${var.env_name}-${var.app_name}-ecs-app-assume"
