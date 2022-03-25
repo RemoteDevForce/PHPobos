@@ -39,7 +39,7 @@ up:
 	docker-compose up -d
 
 build:
-	docker-compose up -d --force-recreate --builc
+	docker-compose up -d --force-recreate --build
 
 ssh:
 	docker-compose exec app /bin/bash
